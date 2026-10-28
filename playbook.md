@@ -19,12 +19,18 @@ Le guide créatif des vidéos. Chaque tâche le lit avant de créer une vidéo.
 - Ne jamais reprendre la même famille que l'une des 2 dernières vidéos, ni le même personnage ou mode son que la dernière.
 - Au maximum 1 vidéo sur 4 (jamais 2 de suite) une VARIANTE nette d'un concept qui a marché (règle, personnage, son, palette, obstacles, accroche changés ; jamais une copie avec un autre seed).
 
+## 🔒 Exigence de qualité (Yanis)
+- La qualité doit être TOP à chaque vidéo : rendu net et fluide, animations propres, couleurs soignées, rien d'approximatif ou de "fait vite". Mieux vaut une idée simple très bien exécutée qu'une idée compliquée bâclée.
+- Le concept doit être bon AVANT de coder : se demander "est-ce que je m'arrêterais en scrollant ?" et "est-ce qu'on a envie de voir la fin ?". Si la réponse est non, changer de concept.
+- Au contrôle qualité, si une image a l'air amateur (texte mal placé, objets qui se chevauchent bizarrement, physique qui bug, fin molle), corriger avant de programmer.
+
 ## 🔒 Droits et sécurité
 - Sons : synthétisés par la tâche, ou fichiers de sounds/ (choix de Yanis). Jamais de musique ou d'extrait protégé trouvé ailleurs.
 - Mélodies : uniquement domaine public (œuvres publiées avant 1929).
 - Personnages : dessinés en code ou images de assets/. Jamais de copie d'un personnage de marque, de dessin animé ou du personnage exact d'un autre créateur.
 - Chiffres réels (hauteurs, distances, maths) : toujours calculés dans le script et vérifiés.
-- Pas de voix synthétique robotique : sans fichier de mot dans sounds/, le mot n'apparaît qu'en texte à l'écran.
+- Pas de voix synthétique robotique.
+- Logos d'équipes, de clubs ou de marques : ils sont protégés, donc ne jamais les dessiner ni les copier. Utiliser les couleurs du club et un nom court ou un code à 3 lettres (MTL, PSG, RMA…) sur la bille. Exception : si Yanis a déposé un logo dans assets/, c'est son choix et on peut l'utiliser.
 
 ---
 
@@ -40,6 +46,8 @@ h) **Rayons** : des personnages glissent le long de lignes néon qui tournent au
 i) **Devinette musicale** : "Guess what song this is", chaque rebond = note suivante d'une mélodie célèbre du domaine public, réponse révélée à la fin ou en premier commentaire.
 j) **Remplissage** : "how many eggs fit in the jar?", entonnoir, sablier, niveau qui monte.
 k) **Échelle / maths visuelles** : quantité qui double à chaque étape comparée à des repères réels avec barre de progression vers un objectif ("How many folds to reach the Moon?" : papier 0,1 mm × 2^n, 20 plis = 105 m, 42 plis ≈ Lune). Caméra qui dézoome, repères en néon simplifié (maison, tour de Pise, Tour Eiffel, Burj Khalifa, Everest, avion, ISS, Lune) avec leur hauteur. Son qui monte d'un demi-ton par étape.
+
+l) **Match de foot (événement)** : à faire 1 à 2 jours AVANT un gros match (Ligue des champions, grand derby, Classico, sélections nationales, CF Montréal en match important ; repéré pendant la veille). Un grand cercle qui tourne avec une ouverture en forme de but (cage dessinée, filet), deux billes aux couleurs des deux équipes avec leur code ou nom court, elles rebondissent dans le cercle et chaque fois qu'une bille sort par le but = BUT pour son équipe. Tableau de score en haut ("PSG 2 - 1 RMA"), CHRONO 0' → 90' qui défile vite (toute la vidéo ≈ 40-50 s), mi-temps à 45', grosse célébration au coup de sifflet final (confettis aux couleurs du vainqueur). Accroche : "PSG vs Real Madrid — the physics predicts the score 👇" ; premier commentaire : "Who wins for real? Drop your score 👇". Son : uniquement des effets (rebonds, filet qui tremble, foule synthétisée, sifflet), pas de mot crié écrit à l'écran. Publier avant le match, jamais après.
 
 On peut combiner deux familles (destruction + œufs, roulette + chats…).
 
@@ -66,7 +74,7 @@ On peut combiner deux familles (destruction + œufs, roulette + chats…).
 - En grand nombre, ça marche très bien (12 œufs, 30 chats).
 
 ## ✏️ Sons
-- (A) Mot crié : fichier sounds/<mot>.mp3 joué sur chaque impact important + le mot en texte qui jaillit ("EGG!", "FAH!"). Pitch ±15 %, max ~8 mots/s ; si trop dense, 1 impact sur 2 ou 3 et effets courts pour les autres.
+- (A) Mot crié : fichier sounds/<mot>.mp3 joué sur chaque impact important. SEULEMENT le son : ne PAS écrire le mot ("FAH", "EGG"…) à l'écran, le son suffit (demande de Yanis). Pitch ±15 %, max ~8 mots/s ; si trop dense, 1 impact sur 2 ou 3 et effets courts pour les autres.
 - (B) Effets synthétisés : bonk, boing, pop, impact grave saturé, craquement, whoosh, ding, riser avant le payoff, grosse explosion finale.
 - (C) Mélodie domaine public note par note (obligatoire pour la devinette musicale).
 - (D) Mix mélodie + mots/effets sur les moments forts.
@@ -77,7 +85,7 @@ On peut combiner deux familles (destruction + œufs, roulette + chats…).
 - Minimaliste blanc sur noir, traits fins
 - Couches colorées texturées
 - Fond texturé sombre avec glow
-- Effets brainrot (au moins 3) : texte qui jaillit, screen shake léger, zoom punch, flash à l'explosion, particules, compteur qui grossit quand il change.
+- Effets brainrot (au moins 3) : texte qui jaillit (chiffres, "+1", "GOAL", "-1 HP"… mais jamais le mot crié du son), screen shake léger, zoom punch, flash à l'explosion, particules, compteur qui grossit quand il change.
 - Zones interdites : 250 px du bas et bande droite de 140 px (interface des apps), sauf le watermark "@novalabs.hq".
 
 ## ✏️ Accroches et légendes qui marchent
@@ -99,4 +107,5 @@ On peut combiner deux familles (destruction + œufs, roulette + chats…).
 
 ## Journal des modifications
 - 2026-10-28 : création du playbook (Yanis + Claude).
+- 2026-10-28 : (Yanis) exigence de qualité, famille « Match de foot », mots criés en son seulement (plus en texte), règle sur les logos.
 - 2026-10-28 : (auto) 2 astuces techniques (5 hashtags TikTok, réglage battle) + idée « Cat Battle Episode N » ; « Battle A vs B » retirée de la banque (réalisée en Cat Battle).
