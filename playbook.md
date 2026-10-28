@@ -54,6 +54,8 @@ l) **Match de foot (événement)** : à faire 1 à 2 jours AVANT un gros match (
 
 m) **Révélation (« Guess what this is? »)** : une image cachée sous un masque noir, la balle efface le masque là où elle passe (traînée qui "creuse") et révèle petit à petit l'image ; compteur "11% FILLED" + barre de progression ; le spectateur essaie de deviner avant la fin, la réponse apparaît à 100 %. C'est le format qui génère le plus de partages ("send to a friend who guesses first"). Images autorisées : tableaux célèbres du domaine public (Joconde, La Nuit étoilée, Le Cri, La Grande Vague…), monuments et animaux dessinés en code, drapeaux, contours de pays, objets ; ou une image déposée par Yanis dans assets/reveal/. Jamais de photo de célébrité ou de personne réelle trouvée en ligne. Accroche : "Can you guess what this is?" / "Guess the painting before 50%". Son : note qui monte avec le pourcentage + petit "ding" tous les 10 %, gros payoff à la révélation.
 
+n) **Course de personnages (série "Square Race")** : 6 à 10 petits personnages carrés de couleurs différentes avec des yeux expressifs (dessinés en code, style cartoon plat) font la course dans un parcours vu de dessus façon jeu vidéo (couloirs, labyrinthe, portes, tapis roulants, ventilateurs, zones d'eau, pièges, un objet tranchant ou un rouleau qui élimine ceux qui le touchent). Chaque élimination = petit éclat de particules, le classement se resserre ; le premier arrivé gagne, couronne à l'arrivée. Compteur : "6 left" ou le classement. Format en SÉRIE : "Square Race — Chapter N" avec les mêmes couleurs de personnages et un nouveau parcours à chaque épisode, pour fidéliser ("Who wins chapter 3? 👇"). Style cartoon plat coloré accepté ici (exception au style minimal premium), mais toujours net, lisible et sans argot. (Yanis 2026-10-28 : vidéo "square race" à 336K likes)
+
 On peut combiner deux familles (destruction + œufs, roulette + chats…).
 
 ## ✏️ Banque d'idées (pas encore faites)
@@ -115,6 +117,7 @@ On peut combiner deux familles (destruction + œufs, roulette + chats…).
 ---
 
 ## Journal des modifications
+- 2026-10-28 : (Yanis) famille « Course de personnages / Square Race » en série.
 - 2026-10-28 : (Yanis) première seconde spectaculaire + question plus grosse (retour Focus Doubling).
 - 2026-10-28 : (Yanis) objet principal = boule la plupart du temps, autre objet de temps en temps ; images de chats retirées par Yanis.
 - 2026-10-28 : (Yanis) qualité pro exigée ; sons/images de Yanis max 1 vidéo sur 4 ; effets discrets ; style minimal premium par défaut.
