@@ -73,11 +73,11 @@ On peut combiner deux familles (destruction + œufs, roulette + chats…).
 ## ✏️ Personnages
 - Balle néon (classique)
 - Dessinés en code : œuf blanc avec deux points pour les yeux, chat cartoon, nugget, citrouille, crâne, banane, cube avec visage, fantôme. Squash & stretch au rebond, yeux qui réagissent.
-- Images de assets/ (voir assets/LISEZMOI.md), affichées à 200 px de diamètre max.
+- Images de assets/ (voir assets/LISEZMOI.md), affichées à 200 px de diamètre max. De temps en temps seulement : max 1 vidéo sur 4, jamais 2 de suite (Yanis).
 - En grand nombre, ça marche très bien (12 œufs, 30 chats).
 
 ## ✏️ Sons
-- (A) Mot crié : fichier sounds/<mot>.mp3 joué sur chaque impact important. SEULEMENT le son : ne PAS écrire le mot ("FAH", "EGG"…) à l'écran, le son suffit (demande de Yanis). Pitch ±15 %, max ~8 mots/s ; si trop dense, 1 impact sur 2 ou 3 et effets courts pour les autres.
+- (A) Mot crié : fichier sounds/<mot>.mp3 joué sur chaque impact important. De temps en temps seulement : max 1 vidéo sur 4, jamais 2 de suite (Yanis). SEULEMENT le son : ne PAS écrire le mot ("FAH", "EGG"…) à l'écran, le son suffit (demande de Yanis). Pitch ±15 %, max ~8 mots/s ; si trop dense, 1 impact sur 2 ou 3 et effets courts pour les autres.
 - (B) Effets synthétisés : bonk, boing, pop, impact grave saturé, craquement, whoosh, ding, riser avant le payoff, grosse explosion finale.
 - (C) Mélodie domaine public note par note (obligatoire pour la devinette musicale).
 - (D) Mix mélodie + mots/effets sur les moments forts.
@@ -89,7 +89,7 @@ On peut combiner deux familles (destruction + œufs, roulette + chats…).
 - Minimaliste blanc sur noir, traits fins
 - Couches colorées texturées
 - Fond texturé sombre avec glow
-- Effets brainrot (au moins 3) : texte qui jaillit (chiffres, "+1", "GOAL", "-1 HP"… mais jamais le mot crié du son), screen shake léger, zoom punch, flash à l'explosion, particules, compteur qui grossit quand il change.
+- Effets (1 ou 2 maximum, discrets, au service de la clarté) : texte qui jaillit (chiffres, "+1", "GOAL", "-1 HP"… mais jamais le mot crié du son), screen shake léger, zoom punch, flash à l'explosion, particules, compteur qui grossit quand il change.
 - Zones interdites : 250 px du bas et bande droite de 140 px (interface des apps), sauf le watermark "@novalabs.hq".
 
 ## ✏️ Accroches et légendes qui marchent
@@ -105,11 +105,12 @@ On peut combiner deux familles (destruction + œufs, roulette + chats…).
 - Metricool : TikTok exige tiktokData.title ; draft false + autoPublish true = publication automatique.
 - Si le rendu dépasse 12 min, réduire la complexité plutôt que la durée.
 - TikTok limite à 5 hashtags par post : mettre 5 hashtags précis dans le texte Metricool. (ajout auto 2026-10-28 : veille hashtags 2026)
-- Battle : délai de 0,8 s entre deux dégâts d'une même paire et arène qui rétrécit selon le nombre de survivants, sinon trop de coups au début et duel final interminable. (ajout auto 2026-10-28 : réglage de cat-battle.py)
+- Battle (attention au visuel : pas de légende de personnages ni de barres de vie multiples, un seul compteur) : délai de 0,8 s entre deux dégâts d'une même paire et arène qui rétrécit selon le nombre de survivants, sinon trop de coups au début et duel final interminable. (ajout auto 2026-10-28 : réglage de cat-battle.py)
 
 ---
 
 ## Journal des modifications
+- 2026-10-28 : (Yanis) qualité pro exigée ; sons/images de Yanis max 1 vidéo sur 4 ; effets discrets ; style minimal premium par défaut.
 - 2026-10-28 : (Yanis) famille « Révélation » (ballloopz) et style « minimal premium » (asmrtherapy, MathMango, NexusBoxLab).
 - 2026-10-28 : création du playbook (Yanis + Claude).
 - 2026-10-28 : (Yanis) règle de ton anti-gênant (pas d'argot LOL/OMG/BRUH, noms sobres).
