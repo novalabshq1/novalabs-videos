@@ -107,6 +107,8 @@ On peut combiner deux familles (destruction + œufs, roulette + chats…).
 - Si le rendu dépasse 12 min, réduire la complexité plutôt que la durée.
 - TikTok limite à 5 hashtags par post : mettre 5 hashtags précis dans le texte Metricool. (ajout auto 2026-10-28 : veille hashtags 2026)
 - Battle (attention au visuel : pas de légende de personnages ni de barres de vie multiples, un seul compteur) : délai de 0,8 s entre deux dégâts d'une même paire et arène qui rétrécit selon le nombre de survivants, sinon trop de coups au début et duel final interminable. (ajout auto 2026-10-28 : réglage de cat-battle.py)
+- Ellipse / foyers : des rayons réfléchis de foyer en foyer se rabattent tous sur le grand axe après 3-4 allers (les billes finissent empilées en colonne). Pour garder un bel éventail, faire repartir les billes en éventail régulier à chaque rencontre. Positions calculées analytiquement (trajet foyer→mur→foyer = 2a) : arrivée parfaitement simultanée, aucune dérive. (ajout auto 2026-10-28 : réglage de focus-doubling.py)
+- Rendu : envoyer les images brutes (rgb24) directement à ffmpeg par un pipe au lieu d'écrire des PNG temporaires (2000 images en 2160x3840 = plusieurs Go de disque). Traînées « string art » : luminosité divisée par (1 + N/56) quand le nombre de billes N augmente, sinon l'image devient une bouillie. (ajout auto 2026-10-28 : rendu de focus-doubling.py)
 
 ---
 
@@ -118,3 +120,4 @@ On peut combiner deux familles (destruction + œufs, roulette + chats…).
 - 2026-10-28 : (Yanis) règle de ton anti-gênant (pas d'argot LOL/OMG/BRUH, noms sobres).
 - 2026-10-28 : (Yanis) exigence de qualité, famille « Match de foot », mots criés en son seulement (plus en texte), règle sur les logos.
 - 2026-10-28 : (auto) 2 astuces techniques (5 hashtags TikTok, réglage battle) + idée « Cat Battle Episode N » ; « Battle A vs B » retirée de la banque (réalisée en Cat Battle).
+- 2026-10-28 : (auto) 2 astuces techniques (ellipse/foyers en éventail régulier, pipe ffmpeg + traînées atténuées).

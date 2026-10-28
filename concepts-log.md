@@ -12,6 +12,13 @@
 |---|---|---|---|---|---|---|---|---|
 | 2026-10-28 | 12:45 | Cat Battle (4 chats d'assets/ dans une arène qui rétrécit, chaque crash = -1 HP, dernier survivant couronné) | g) Battle | nouveau (concepts/cat-battle.py, seed 11) | chats d'assets/ (LOL, BRUH, WHAT, OMG) | (A) mot crié FAH + effets synthés | Which cat wins? 👇 | oui (id 409143206, programmée 12:45) |
 
+
+## Journal v3
+
+| Date | Créneau | Concept | Famille | Nouveau/variante | Objet | Son | Assets Yanis oui/non | Note /10 | Accroche | Metricool |
+|---|---|---|---|---|---|---|---|---|---|---|
+| 2026-10-28 | 19:00 | Focus Doubling (billes lancées d'un foyer d'une ellipse, elles se rejoignent toutes à l'autre foyer et doublent à chaque rencontre : 1 → 128, traînées « string art », 128/128 en or) | b) Convergence / géométrie | nouveau (concepts/focus-doubling.py) | billes (dégradé cyan-violet-rose, accent or) | synthé : cloches pentatoniques sur chaque rebond, accord à chaque rencontre, nappe, montée, payoff | non | 8,5 | Will all 128 balls hit the same point? | METRICOOL_PLACEHOLDER |
+
 ## Idées
 - battle A vs B
 - traînée spirographe
