@@ -10,7 +10,7 @@
 
 | Date | Créneau | Concept | Famille | Nouveau/variante | Personnage | Mode son | Accroche | Metricool |
 |---|---|---|---|---|---|---|---|---|
-| 2026-10-28 | 12:45 | Cat Battle (4 chats d'assets/ dans une arène qui rétrécit, chaque crash = -1 HP, dernier survivant couronné) | g) Battle | nouveau (concepts/cat-battle.py, seed 11) | chats d'assets/ (LOL, BRUH, WHAT, OMG) | (A) mot crié FAH + effets synthés | Which cat wins? 👇 | METRICOOL_TBD |
+| 2026-10-28 | 12:45 | Cat Battle (4 chats d'assets/ dans une arène qui rétrécit, chaque crash = -1 HP, dernier survivant couronné) | g) Battle | nouveau (concepts/cat-battle.py, seed 11) | chats d'assets/ (LOL, BRUH, WHAT, OMG) | (A) mot crié FAH + effets synthés | Which cat wins? 👇 | oui (id 409143206, programmée 12:45) |
 
 ## Idées
 - battle A vs B
