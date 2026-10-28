@@ -44,7 +44,6 @@ k) **Échelle / maths visuelles** : quantité qui double à chaque étape compar
 On peut combiner deux familles (destruction + œufs, roulette + chats…).
 
 ## ✏️ Banque d'idées (pas encore faites)
-- Battle A vs B
 - Traînée spirographe
 - Hexagone qui rétrécit
 - Pluie d'objets dans un entonnoir
@@ -58,6 +57,7 @@ On peut combiner deux familles (destruction + œufs, roulette + chats…).
 - Nuggets qui tombent sur un plus gros nugget
 - Grain de riz qui double jusqu'à remplir la Terre
 - Combien de balles pour remplir la Tour Eiffel
+- Série « Cat Battle Episode N » : mêmes 4 chats, classement des victoires cumulé affiché, « Who wins episode 2? » (ajout auto 2026-10-28 : les ball battles tournent en séries récurrentes, fidélise)
 
 ## ✏️ Personnages
 - Balle néon (classique)
@@ -92,8 +92,11 @@ On peut combiner deux familles (destruction + œufs, roulette + chats…).
 ## ✏️ Astuces techniques
 - Metricool : TikTok exige tiktokData.title ; draft false + autoPublish true = publication automatique.
 - Si le rendu dépasse 12 min, réduire la complexité plutôt que la durée.
+- TikTok limite à 5 hashtags par post : mettre 5 hashtags précis dans le texte Metricool. (ajout auto 2026-10-28 : veille hashtags 2026)
+- Battle : délai de 0,8 s entre deux dégâts d'une même paire et arène qui rétrécit selon le nombre de survivants, sinon trop de coups au début et duel final interminable. (ajout auto 2026-10-28 : réglage de cat-battle.py)
 
 ---
 
 ## Journal des modifications
 - 2026-10-28 : création du playbook (Yanis + Claude).
+- 2026-10-28 : (auto) 2 astuces techniques (5 hashtags TikTok, réglage battle) + idée « Cat Battle Episode N » ; « Battle A vs B » retirée de la banque (réalisée en Cat Battle).
