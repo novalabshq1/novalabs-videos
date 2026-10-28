@@ -50,6 +50,8 @@ k) **Échelle / maths visuelles** : quantité qui double à chaque étape compar
 
 l) **Match de foot (événement)** : à faire 1 à 2 jours AVANT un gros match (Ligue des champions, grand derby, Classico, sélections nationales, CF Montréal en match important ; repéré pendant la veille). Un grand cercle qui tourne avec une ouverture en forme de but (cage dessinée, filet), deux billes aux couleurs des deux équipes avec leur code ou nom court, elles rebondissent dans le cercle et chaque fois qu'une bille sort par le but = BUT pour son équipe. Tableau de score en haut ("PSG 2 - 1 RMA"), CHRONO 0' → 90' qui défile vite (toute la vidéo ≈ 40-50 s), mi-temps à 45', grosse célébration au coup de sifflet final (confettis aux couleurs du vainqueur). Accroche : "PSG vs Real Madrid — the physics predicts the score 👇" ; premier commentaire : "Who wins for real? Drop your score 👇". Son : uniquement des effets (rebonds, filet qui tremble, foule synthétisée, sifflet), pas de mot crié écrit à l'écran. Publier avant le match, jamais après.
 
+m) **Révélation (« Guess what this is? »)** : une image cachée sous un masque noir, la balle efface le masque là où elle passe (traînée qui "creuse") et révèle petit à petit l'image ; compteur "11% FILLED" + barre de progression ; le spectateur essaie de deviner avant la fin, la réponse apparaît à 100 %. C'est le format qui génère le plus de partages ("send to a friend who guesses first"). Images autorisées : tableaux célèbres du domaine public (Joconde, La Nuit étoilée, Le Cri, La Grande Vague…), monuments et animaux dessinés en code, drapeaux, contours de pays, objets ; ou une image déposée par Yanis dans assets/reveal/. Jamais de photo de célébrité ou de personne réelle trouvée en ligne. Accroche : "Can you guess what this is?" / "Guess the painting before 50%". Son : note qui monte avec le pourcentage + petit "ding" tous les 10 %, gros payoff à la révélation.
+
 On peut combiner deux familles (destruction + œufs, roulette + chats…).
 
 ## ✏️ Banque d'idées (pas encore faites)
@@ -82,6 +84,7 @@ On peut combiner deux familles (destruction + œufs, roulette + chats…).
 - Mixage : -1 dBFS, pas de clipping, sons calés sur les impacts (< 30 ms).
 
 ## ✏️ Styles visuels
+- Style "minimal premium" (celui des plus gros comptes) : fond sombre uni, UN seul objet au centre, UN gros chiffre en haut (16 Cuts, 11% FILLED, balls: 13, 20 folds = 105 m) + éventuellement une barre de progression, une seule ligne de question, aucun autre texte. Objets avec du volume quand c'est possible (dégradé, reflet, ombre, texture bois/métal/verre) plutôt que des formes plates. À privilégier au moins 1 vidéo sur 2.
 - Néon arc-en-ciel sur fond noir
 - Minimaliste blanc sur noir, traits fins
 - Couches colorées texturées
@@ -107,6 +110,7 @@ On peut combiner deux familles (destruction + œufs, roulette + chats…).
 ---
 
 ## Journal des modifications
+- 2026-10-28 : (Yanis) famille « Révélation » (ballloopz) et style « minimal premium » (asmrtherapy, MathMango, NexusBoxLab).
 - 2026-10-28 : création du playbook (Yanis + Claude).
 - 2026-10-28 : (Yanis) règle de ton anti-gênant (pas d'argot LOL/OMG/BRUH, noms sobres).
 - 2026-10-28 : (Yanis) exigence de qualité, famille « Match de foot », mots criés en son seulement (plus en texte), règle sur les logos.
