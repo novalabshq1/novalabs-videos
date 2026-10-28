@@ -22,6 +22,7 @@ Le guide créatif des vidéos. Chaque tâche le lit avant de créer une vidéo.
 ## 🔒 Exigence de qualité (Yanis)
 - La qualité doit être TOP à chaque vidéo : rendu net et fluide, animations propres, couleurs soignées, rien d'approximatif ou de "fait vite". Mieux vaut une idée simple très bien exécutée qu'une idée compliquée bâclée.
 - Le concept doit être bon AVANT de coder : se demander "est-ce que je m'arrêterais en scrollant ?" et "est-ce qu'on a envie de voir la fin ?". Si la réponse est non, changer de concept.
+- TON : jamais "gênant" ni forcé. Le brainrot vient du son, du rythme et du visuel, PAS des mots. Interdit à l'écran comme dans les légendes et commentaires : l'argot internet plaqué (LOL, OMG, BRUH, WTF, sigma, skibidi, rizz, aura, "no way", "fr fr"…), les emojis en rafale, les noms de personnages en argot. Les personnages sont nommés sobrement (couleur ou numéro : Red / Blue, #1 à #4, ou le code de l'équipe) ou pas du tout. Textes à l'écran : titre-question, compteur, chiffres ("+1", "-1 HP", "GOAL", "x5"), c'est tout. Légendes courtes et naturelles, comme les gros comptes du genre : "Which one wins?", "Will they all hit the same point?" — maximum 1 emoji. (demande de Yanis 2026-10-28 : Cat Battle avec chats nommés LOL/OMG/BRUH jugée gênante)
 - Au contrôle qualité, si une image a l'air amateur (texte mal placé, objets qui se chevauchent bizarrement, physique qui bug, fin molle), corriger avant de programmer.
 
 ## 🔒 Droits et sécurité
@@ -107,5 +108,6 @@ On peut combiner deux familles (destruction + œufs, roulette + chats…).
 
 ## Journal des modifications
 - 2026-10-28 : création du playbook (Yanis + Claude).
+- 2026-10-28 : (Yanis) règle de ton anti-gênant (pas d'argot LOL/OMG/BRUH, noms sobres).
 - 2026-10-28 : (Yanis) exigence de qualité, famille « Match de foot », mots criés en son seulement (plus en texte), règle sur les logos.
 - 2026-10-28 : (auto) 2 astuces techniques (5 hashtags TikTok, réglage battle) + idée « Cat Battle Episode N » ; « Battle A vs B » retirée de la banque (réalisée en Cat Battle).
