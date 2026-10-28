@@ -88,6 +88,12 @@ On peut combiner deux familles (destruction + œufs, roulette + chats…).
 - (D) Mix mélodie + mots/effets sur les moments forts.
 - Mixage : -1 dBFS, pas de clipping, sons calés sur les impacts (< 30 ms).
 
+- (E) MUSIQUE RÉCENTE ET CONNUE (de temps en temps : environ 1 vidéo sur 3, jamais 2 de suite) : un son populaire récent (sorti ces dernières années, connu, tendance sur les apps), pas un vieux classique. Comme ces morceaux sont protégés, ne JAMAIS les mettre dans le MP4. À la place :
+  - Instagram : les ajouter via la bibliothèque officielle d'Instagram dans Metricool : instagramData.audioConfiguration = {"audioId": "<titre + artiste>", "videoVolume": 30, "audioVolume": 100} (Metricool trouve le morceau sous licence ; si la recherche donne plusieurs résultats, reprendre l'id exact proposé ; si le compte Instagram ne le permet pas — erreur : compte non Business ou pas relié à une page Facebook — retirer audioConfiguration, publier sans, et le signaler).
+  - TikTok et YouTube : pas possible automatiquement ; mettre dans le message à Yanis "🎵 Son à ajouter dans l'app : <titre — artiste>" pour qu'il l'ajoute s'il veut.
+  - Pour ces vidéos, garder dans le MP4 des sons d'impact discrets (la musique doit pouvoir passer par-dessus) et choisir un morceau dont l'énergie colle au rythme de la vidéo. Repérer le morceau pendant la veille (sons tendance du moment).
+  (Yanis 2026-10-28)
+
 ## ✏️ Styles visuels
 - Style "minimal premium" (celui des plus gros comptes) : fond sombre uni, UN seul objet au centre, UN gros chiffre en haut (16 Cuts, 11% FILLED, balls: 13, 20 folds = 105 m) + éventuellement une barre de progression, une seule ligne de question, aucun autre texte. Objets avec du volume quand c'est possible (dégradé, reflet, ombre, texture bois/métal/verre) plutôt que des formes plates. À privilégier au moins 1 vidéo sur 2.
 - Néon arc-en-ciel sur fond noir
@@ -117,6 +123,7 @@ On peut combiner deux familles (destruction + œufs, roulette + chats…).
 ---
 
 ## Journal des modifications
+- 2026-10-28 : (Yanis) mode son (E) musique récente et connue, de temps en temps, via la bibliothèque sous licence.
 - 2026-10-28 : (Yanis) famille « Course de personnages / Square Race » en série.
 - 2026-10-28 : (Yanis) première seconde spectaculaire + question plus grosse (retour Focus Doubling).
 - 2026-10-28 : (Yanis) objet principal = boule la plupart du temps, autre objet de temps en temps ; images de chats retirées par Yanis.
