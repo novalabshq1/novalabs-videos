@@ -71,6 +71,7 @@ On peut combiner deux familles (destruction + œufs, roulette + chats…).
 - Série « Cat Battle Episode N » : mêmes 4 chats, classement des victoires cumulé affiché, « Who wins episode 2? » (ajout auto 2026-10-28 : les ball battles tournent en séries récurrentes, fidélise)
 
 ## ✏️ Personnages
+- Objet principal : une boule/bille la plupart du temps (~3 vidéos sur 4). De temps en temps un autre objet pour surprendre (cube, œuf, goutte, gemme, sphère en bois ou métal à découper, fruit, pièce, dé, hexagone, ressort, personnage simple dessiné en code). Jamais 2 vidéos de suite sans boule. (Yanis)
 - Balle néon (classique)
 - Dessinés en code : œuf blanc avec deux points pour les yeux, chat cartoon, nugget, citrouille, crâne, banane, cube avec visage, fantôme. Squash & stretch au rebond, yeux qui réagissent.
 - Images de assets/ (voir assets/LISEZMOI.md), affichées à 200 px de diamètre max. De temps en temps seulement : max 1 vidéo sur 4, jamais 2 de suite (Yanis).
@@ -110,6 +111,7 @@ On peut combiner deux familles (destruction + œufs, roulette + chats…).
 ---
 
 ## Journal des modifications
+- 2026-10-28 : (Yanis) objet principal = boule la plupart du temps, autre objet de temps en temps ; images de chats retirées par Yanis.
 - 2026-10-28 : (Yanis) qualité pro exigée ; sons/images de Yanis max 1 vidéo sur 4 ; effets discrets ; style minimal premium par défaut.
 - 2026-10-28 : (Yanis) famille « Révélation » (ballloopz) et style « minimal premium » (asmrtherapy, MathMango, NexusBoxLab).
 - 2026-10-28 : création du playbook (Yanis + Claude).
