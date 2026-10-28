@@ -23,6 +23,8 @@ Le guide créatif des vidéos. Chaque tâche le lit avant de créer une vidéo.
 - La qualité doit être TOP à chaque vidéo : rendu net et fluide, animations propres, couleurs soignées, rien d'approximatif ou de "fait vite". Mieux vaut une idée simple très bien exécutée qu'une idée compliquée bâclée.
 - Le concept doit être bon AVANT de coder : se demander "est-ce que je m'arrêterais en scrollant ?" et "est-ce qu'on a envie de voir la fin ?". Si la réponse est non, changer de concept.
 - TON : jamais "gênant" ni forcé. Le brainrot vient du son, du rythme et du visuel, PAS des mots. Interdit à l'écran comme dans les légendes et commentaires : l'argot internet plaqué (LOL, OMG, BRUH, WTF, sigma, skibidi, rizz, aura, "no way", "fr fr"…), les emojis en rafale, les noms de personnages en argot. Les personnages sont nommés sobrement (couleur ou numéro : Red / Blue, #1 à #4, ou le code de l'équipe) ou pas du tout. Textes à l'écran : titre-question, compteur, chiffres ("+1", "-1 HP", "GOAL", "x5"), c'est tout. Légendes courtes et naturelles, comme les gros comptes du genre : "Which one wins?", "Will they all hit the same point?" — maximum 1 emoji. (demande de Yanis 2026-10-28 : Cat Battle avec chats nommés LOL/OMG/BRUH jugée gênante)
+- PREMIÈRE SECONDE : l'image de départ doit déjà être spectaculaire et lisible (mouvement, plusieurs éléments, couleur, ou l'enjeu visible). Jamais un petit objet seul dans un grand décor vide au début. (Yanis + Claude 2026-10-28 : retour sur Focus Doubling)
+- La question en haut doit être grosse et lisible (au moins 60 % de la taille du chiffre), pas une petite ligne.
 - Au contrôle qualité, si une image a l'air amateur (texte mal placé, objets qui se chevauchent bizarrement, physique qui bug, fin molle), corriger avant de programmer.
 
 ## 🔒 Droits et sécurité
@@ -113,6 +115,7 @@ On peut combiner deux familles (destruction + œufs, roulette + chats…).
 ---
 
 ## Journal des modifications
+- 2026-10-28 : (Yanis) première seconde spectaculaire + question plus grosse (retour Focus Doubling).
 - 2026-10-28 : (Yanis) objet principal = boule la plupart du temps, autre objet de temps en temps ; images de chats retirées par Yanis.
 - 2026-10-28 : (Yanis) qualité pro exigée ; sons/images de Yanis max 1 vidéo sur 4 ; effets discrets ; style minimal premium par défaut.
 - 2026-10-28 : (Yanis) famille « Révélation » (ballloopz) et style « minimal premium » (asmrtherapy, MathMango, NexusBoxLab).
