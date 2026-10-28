@@ -17,7 +17,7 @@
 
 | Date | Créneau | Concept | Famille | Nouveau/variante | Objet | Son | Assets Yanis oui/non | Note /10 | Accroche | Metricool |
 |---|---|---|---|---|---|---|---|---|---|---|
-| 2026-10-28 | 19:00 | Focus Doubling (billes lancées d'un foyer d'une ellipse, elles se rejoignent toutes à l'autre foyer et doublent à chaque rencontre : 1 → 128, traînées « string art », 128/128 en or) | b) Convergence / géométrie | nouveau (concepts/focus-doubling.py) | billes (dégradé cyan-violet-rose, accent or) | synthé : cloches pentatoniques sur chaque rebond, accord à chaque rencontre, nappe, montée, payoff | non | 8,5 | Will all 128 balls hit the same point? | METRICOOL_PLACEHOLDER |
+| 2026-10-28 | 19:00 | Focus Doubling (billes lancées d'un foyer d'une ellipse, elles se rejoignent toutes à l'autre foyer et doublent à chaque rencontre : 1 → 128, traînées « string art », 128/128 en or) | b) Convergence / géométrie | nouveau (concepts/focus-doubling.py) | billes (dégradé cyan-violet-rose, accent or) | synthé : cloches pentatoniques sur chaque rebond, accord à chaque rencontre, nappe, montée, payoff | non | 8,5 | Will all 128 balls hit the same point? | oui (id 409483162, programmée 19:00) |
 
 ## Idées
 - battle A vs B
