@@ -64,7 +64,6 @@ On peut combiner deux familles (destruction + œufs, roulette + chats…).
 - Pluie d'objets dans un entonnoir
 - Cercle à pics
 - Pendulum wave
-- Cordes entre impacts
 - Effet papillon
 - Œuf qui se fissure à chaque rebond et éclot
 - Chat qui grossit à chaque "FAH"
@@ -72,6 +71,7 @@ On peut combiner deux familles (destruction + œufs, roulette + chats…).
 - Nuggets qui tombent sur un plus gros nugget
 - Grain de riz qui double jusqu'à remplir la Terre
 - Combien de balles pour remplir la Tour Eiffel
+- Série « Laser Royale — Round N » : mêmes 8 drapeaux, nouvelle graine, autre arène (hexagone, cercle qui tourne) ; « Who wins round 2? » (ajout auto 2026-10-29 : format battle royale multi-pays qui pousse à commenter son pays)
 - Série « Cat Battle Episode N » : mêmes 4 chats, classement des victoires cumulé affiché, « Who wins episode 2? » (ajout auto 2026-10-28 : les ball battles tournent en séries récurrentes, fidélise)
 
 ## ✏️ Personnages
@@ -121,6 +121,8 @@ On peut combiner deux familles (destruction + œufs, roulette + chats…).
 - Rendu : envoyer les images brutes (rgb24) directement à ffmpeg par un pipe au lieu d'écrire des PNG temporaires (2000 images en 2160x3840 = plusieurs Go de disque). Traînées « string art » : luminosité divisée par (1 + N/56) quand le nombre de billes N augmente, sinon l'image devient une bouillie. (ajout auto 2026-10-28 : rendu de focus-doubling.py)
 - Fumée / vapeur : la dessiner en mélange NORMAL translucide (alpha ≤ 0,16 par bouffée, qui grossit ×4 en montant) et non en lueur additive, sinon on obtient des boules blanches saturées ; la faire disparaître avant la zone du titre et du compteur. Préchauffer la fumée (particules nées avant t=0) pour que la première image fume déjà. (ajout auto 2026-10-29 : réglage de hot-ball-bands.py)
 - Audio : filtre passe-bas « cumsum » par blocs : limiter la taille de bloc à 40/-ln(a) sinon a^n tombe à 0 et l'audio devient NaN. Quand un payoff (éclaboussure, explosion) écrase le mix, baisser son gain et passer un limiteur doux tanh avant la normalisation à -1 dBFS. (ajout auto 2026-10-29 : mix de hot-ball-bands.py)
+- Battle royale à lasers (concepts/laser-royale.py) : une règle « tout touche = élimination » vide l'arène en 3 s. Ce qui équilibre : lasers FIXES (corde entre deux impacts du même joueur) et SOLIDES pour les autres, cassés en 2 rebonds ; un joueur n'est éliminable qu'après avoir tracé 3 lasers ; plafond de lasers par joueur qui baisse de 5 à 1 entre 14 s et 38 s pour forcer la fin du duel ; recherche de graine en parallèle (Pool) en visant des éliminations étalées. Commencer la vidéo 1,25 s après le début de la simulation pour que la 1re image ait déjà des lasers. (ajout auto 2026-10-29 : réglage de laser-royale.py)
+- Néon qui s'éteint : dessiner les traits fins sur un calque noir ajouté en mode ADDITIF (ImageChops.add) et non directement sur l'image, sinon un trait qui s'estompe devient une ligne sombre sur le halo. Flou de mouvement propre : moyenne de 4 collages du sprite sur un recadrage autour de la boule (obturateur 180°) ; 2 copies fantômes donnent un effet « pièces empilées ». (ajout auto 2026-10-29 : rendu de laser-royale.py)
 
 ---
 
@@ -137,3 +139,4 @@ On peut combiner deux familles (destruction + œufs, roulette + chats…).
 - 2026-10-28 : (auto) 2 astuces techniques (5 hashtags TikTok, réglage battle) + idée « Cat Battle Episode N » ; « Battle A vs B » retirée de la banque (réalisée en Cat Battle).
 - 2026-10-28 : (auto) 2 astuces techniques (ellipse/foyers en éventail régulier, pipe ffmpeg + traînées atténuées).
 - 2026-10-29 : (auto) 2 astuces techniques (fumée/vapeur en mélange normal, filtre audio sans débordement + limiteur doux).
+- 2026-10-29 : (auto) 2 astuces techniques (équilibrage battle royale à lasers, néon additif + flou de mouvement) + idée « Laser Royale — Round N » ; « Cordes entre impacts » retirée de la banque (réalisée en Laser Royale).
