@@ -28,3 +28,4 @@
 - pendulum wave
 - cordes entre impacts
 - effet papillon
+| 2026-10-29 | 12:45 | Hot Ball vs 200 Bands (boule chauffée posée sur 200 élastiques tendus ; chaque élastique cassé la rend plus chaude et plus rapide ; le 200e cède, la boule blanche plonge dans l'eau → vapeur, elle refroidit) | c) Destruction | nouveau (concepts/hot-ball-bands.py) | boule de métal incandescente (rouge → blanc), élastiques turquoise/violet/rose | synthé : pluck pentatonique à chaque claquement, grésillement, nappe + montée, éclaboussure + accord | non | 8 | Can a red hot ball break 200 bands? | oui (12:45) |
