@@ -1,34 +1,29 @@
-# Tendances — 2026-10-29 (America/Toronto)
+# Tendances — 2026-10-30 (America/Toronto)
 
-> Veille faite par 8 recherches web. Comme hier, très peu de résultats datés précisément d'octobre 2026 sur les simulations : beaucoup de pages SEO sans données → **certitude faible** sur ce qui cartonne « cette semaine ». Les points sport sont plus fiables (sources officielles).
+> Veille faite par 6 recherches web. Les moteurs ne renvoient presque rien de daté sur les simulations satisfaisantes d'octobre 2026 → **certitude faible** sur ce qui cartonne cette semaine. Les infos sport (calendrier) sont plus fiables mais à revérifier.
 
 ## Tendances
-1. **Bouncing ball / « Will the ball escape? »** — format toujours très produit (outils no-code type BallEngine, tutos Python). Concurrence forte → la différence se fait sur l'exécution (rendu, son calé, payoff net). *Adapter* : une règle, un chiffre, une fin spectaculaire.
-2. **Première image > 3 premières secondes** (guides Shorts 2026) : l'image de départ doit déjà montrer l'enjeu. *Adapter* : démarrer en pleine action (objet déjà en contact, compteur visible).
-3. **Durée** : près de la moitié des Shorts viraux font 20-40 s (guide 2026, non vérifié) ; fin « satisfaisante » qui donne envie de relancer.
-4. **Halloween (samedi 31 oct.)** — Ramalama (Bang Bang) revient pour Halloween (guide 14 oct. 2026). *Adapter* : palette orange / braise / violet jusqu'au 31, objets chauds/lumineux.
-5. **Destruction lente « hot ball vs … »** (boule chauffée contre élastiques, couches, glace) : format classique du genre, pas de source datée cette semaine (incertain) mais toujours repris par les gros comptes.
+1. **Bouncing ball / « Will the ball escape? »** : format toujours en circulation (KnowYourMeme, jeu Ball Battle Simulator sorti mai 2026 « inspiré des vidéos virales de ball battle »). Concurrence forte → l'exécution fait la différence.
+2. **Mécanique « les balles se clonent à chaque collision »** : on la retrouve dans plusieurs jeux mobiles (Bump Pop, Bounce and Collect, Plinko multiplicateurs) et dans des projets fans inspirés de vidéos TikTok. Les règles exactes des vidéos d'origine ne sont pas documentées (incertain).
+3. **Halloween (samedi 31 oct.)** : sons et contenus d'Halloween montent jusqu'au 31 ; hashtags relevés (listes de septembre) : #halloween2026, #spookyseason. TikTok limite à 5 hashtags.
+4. **Première image et fin satisfaisante** (guides Shorts 2026, non vérifiés) : enjeu visible dès la 1re image, boucle ou fin nette.
 
 ## Foot (2 prochains jours)
-- **Pas de Ligue des champions** avant la J4 (3-4 nov.).
-- **Liverpool – Arsenal** : listé au 31 oct. 15:00 (UK) par des calendriers, mais **déplacé au dimanche 1er nov. 16:30 (UK)** selon liverpoolfc.com → hors fenêtre de 2 jours, mais à garder en tête pour le run du 30 ou 31 (publier AVANT le match). Attention : deux équipes en rouge → choisir un maillot extérieur clair pour Arsenal ou un code LIV/ARS très lisible.
-- Clásico déjà joué (25 oct.). MLS : fin de saison régulière le 7 nov., CF Montréal sans place confirmée.
+- **Chelsea – Manchester United, samedi 31 oct.** à Stamford Bridge, coup d'envoi le plus cité 12:30 GMT (= 8:30 heure de Toronto) ; certaines sources donnent 15:00 (incertain). → vidéo de ce jour publiée à 7:30, avant le match.
+- **Liverpool – Arsenal** : dimanche 1er nov., 16:30 (UK) d'après Sky Sports / Fanbanter ; autre source : 31 oct.
+- Man City – Brighton, Newcastle – Everton, Tottenham – Crystal Palace aussi samedi. Pas de Ligue des champions avant le 3-4 nov. Programmes provisoires.
 
-## Sons tendance (incertain — vérifier dans l'app)
-- TikTok / Reels : « Ramalama (Bang Bang) » – Róisín Murphy (Halloween).
-- Sinon son original synthétisé.
+## Sons tendance (incertain)
+- Halloween (Ramalama – Róisín Murphy cité dans les guides). Sinon son synthétisé.
 
 ## Hashtags
-#satisfying #oddlysatisfying #physics #simulation #halloween (5 max sur TikTok)
+#satisfying #oddlysatisfying #chelsea #manutd #simulation
 
 ## Sources
 - https://knowyourmeme.com/memes/will-the-ball-escape-ball-bouncing-brainrot
-- https://www.producthunt.com/p/fun-circle-games/ballengine-app
+- https://www.crazygames.com/game/ball-battle-simulator
+- https://golem (itch.io fan project, kampi57.itch.io/golem) ; https://mwm.ai/apps/bump-pop/1631334873
 - https://newengen.com/insights/halloween-tiktok-reels-trends/
-- https://wpreset.com/how-to-grow-faster-on-youtube-in-2026-shorts-strategy-click-through-rate-and-watch-time-optimization/
-- https://air.io/en/youtube-hacks/13-types-of-shorts-that-always-go-viral-with-examples
-- https://www.uefa.com/uefachampionsleague/news/02a8-2174c9e9019d-f909a77bd77a-1000--202627-champions-league-all-the-league-phase-fixtures-and-results/
-- https://www.liverpoolfc.com/news/fixture-updates-new-dates-anfield-games-against-man-city-and-arsenal
-- https://www.empireofthekop.com/2026/08/17/liverpool-man-city-arsenal-new-fixture-dates/
-- https://www.football-espana.net/2026/09/02/2026-27-el-clasico-date
-- https://www.mlssoccer.com/playoffs/2026/news/audi-2026-mls-cup-playoffs-key-dates-schedule-information
+- https://www.chelseafc.com/en/news/article/chelseas-2026-27-premier-league-fixtures-announced
+- https://breakingthelines.com/@btl/chelsea-vs-manchester-united-what-a-win-draw-or-loss-means-for-2026-27-premier-league
+- https://fanbanter.co.uk/premier-league-fixtures-results/
