@@ -131,6 +131,7 @@ On peut combiner deux familles (destruction + œufs, roulette + chats…).
 - Texte : chrono à cellules fixes par caractère (chiffres 56 px, apostrophe 30 px) pour que les minutes ne « sautent » pas ; confettis coupés au-dessus de la zone du titre et dessinés AVANT les balles pour ne jamais masquer l'objet principal. Environnement : utiliser `python3.13` (python3 n'a pas numpy). (ajout auto 2026-10-30 : rendu de match-che-mun.py)
 - Contamination (concepts/patient-zero.py) : dans un gaz de 50-100 billes, « 1 contact = infecté » contamine tout en 3 s. Pour 25-30 s : 3 contacts nécessaires (anti-rebond 0,25 s par victime), infectées lentes (50 px/s) contre saines rapides (150 px/s), incubation 0,6 s, puis recherche de graine en visant un dernier survivant seul pendant 2-3 s. Calque de lueur au quart de résolution : taille W*S/4 et coordonnées ×S/4 (sinon les halos partent en bas à droite). Flash final en ajout additif d'une faible couleur, pas en Image.blend (voile gris). (ajout auto 2026-10-30 : réglage de patient-zero.py)
 
+- Bataille de fils (concepts/string-circle.py) : si chaque fil traversé casse à coup sûr, tout est fini en 3 s (une bille qui traverse un éventail de 140 fils les coupe presque tous). Ce qui équilibre : probabilité de casse qui monte de 2 % à 100 % sur 40 s (« les fils s'usent ») → décroissance régulière et vraie escalade. Détection : signe du produit vectoriel (bille − propriétaire) × (ancre − propriétaire) qui change entre 2 sous-pas, avec projection entre 0 et 1 (gère aussi le fil qui balaie une bille immobile). Rendu en pycairo (`pip install pycairo`, traits antialiasés, 0,07 s/image). Audio : normaliser à -3 dBFS, l'AAC dépasse de +2-3 dB sur les claquements denses. (ajout auto 2026-10-30 : réglage de string-circle.py)
 ---
 
 ## Journal des modifications
@@ -149,3 +150,4 @@ On peut combiner deux familles (destruction + œufs, roulette + chats…).
 - 2026-10-29 : (auto) 2 astuces techniques (équilibrage battle royale à lasers, néon additif + flou de mouvement) + idée « Laser Royale — Round N » ; « Cordes entre impacts » retirée de la banque (réalisée en Laser Royale).
 - 2026-10-30 : (auto) 2 astuces techniques (match de foot : scénario par recherche de graine, but rotatif ; chrono à cellules fixes, confettis, python3.13).
 - 2026-10-30 : (auto) famille « o) Contamination », idée « Conquête de territoire », astuce réglage contamination + lueur/flash (patient-zero.py).
+- 2026-10-30 : (auto) astuce bataille de fils (probabilité de casse croissante, détection par produit vectoriel, pycairo, marge AAC).
