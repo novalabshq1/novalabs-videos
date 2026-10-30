@@ -10,7 +10,7 @@
 
 ## Foot (2 prochains jours)
 - **Chelsea – Manchester United, samedi 31 oct.** à Stamford Bridge, coup d'envoi le plus cité 12:30 GMT (= 8:30 heure de Toronto) ; certaines sources donnent 15:00 (incertain). → vidéo de ce jour publiée à 7:30, avant le match.
-- **Liverpool – Arsenal** : dimanche 1er nov., 16:30 (UK) d'après Sky Sports / Fanbanter ; autre source : 31 oct.
+- **Liverpool – Arsenal** : dimanche 1er nov., 16:30 (UK) = 11:30 heure de Toronto (heure d'hiver dès le 1er nov.) — confirmé par plusieurs calendriers au run de 12:45 (liverpoolfc.com : match déplacé au dimanche) ; quelques sites donnent encore le 31 oct. (anciens). → candidat pour le format foot au run du 31 oct. 07:30 (la vidéo de 12:45 ne peut pas être du foot : famille déjà utilisée à 07:30).
 - Man City – Brighton, Newcastle – Everton, Tottenham – Crystal Palace aussi samedi. Pas de Ligue des champions avant le 3-4 nov. Programmes provisoires.
 
 ## Sons tendance (incertain)
@@ -19,7 +19,14 @@
 ## Hashtags
 #satisfying #oddlysatisfying #chelsea #manutd #simulation
 
+## Complément du run de 12:45
+- Format « marble race and territory war » (conquête de territoire par des billes) repéré comme jeu/format de chaîne : mécanique de conquête à essayer (incertain : pas de chiffres de vues).
+- Halloween demain : palette violet-noir + vert toxique / orange, thème « infection / zombie » cohérent avec la saison.
+
 ## Sources
+- https://www.liverpoolfc.com/news/fixture-updates-new-dates-anfield-games-against-man-city-and-arsenal
+- https://gidstats.com/football/premier-league/2026-11-01-1557453-liverpool-vs-arsenal/
+- https://skich.app/games/marble-race-and-territory-war
 - https://knowyourmeme.com/memes/will-the-ball-escape-ball-bouncing-brainrot
 - https://www.crazygames.com/game/ball-battle-simulator
 - https://golem (itch.io fan project, kampi57.itch.io/golem) ; https://mwm.ai/apps/bump-pop/1631334873

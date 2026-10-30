@@ -56,6 +56,8 @@ m) **Révélation (« Guess what this is? »)** : une image cachée sous un masq
 
 n) **Course de personnages (série "Square Race")** : 6 à 10 petits personnages carrés de couleurs différentes avec des yeux expressifs (dessinés en code, style cartoon plat) font la course dans un parcours vu de dessus façon jeu vidéo (couloirs, labyrinthe, portes, tapis roulants, ventilateurs, zones d'eau, pièges, un objet tranchant ou un rouleau qui élimine ceux qui le touchent). Chaque élimination = petit éclat de particules, le classement se resserre ; le premier arrivé gagne, couronne à l'arrivée. Compteur : "6 left" ou le classement. Format en SÉRIE : "Square Race — Chapter N" avec les mêmes couleurs de personnages et un nouveau parcours à chaque épisode, pour fidéliser ("Who wins chapter 3? 👇"). Style cartoon plat coloré accepté ici (exception au style minimal premium), mais toujours net, lisible et sans argot. (Yanis 2026-10-28 : vidéo "square race" à 336K likes)
 
+o) **Contamination** : une bille infectée parmi des dizaines de billes saines dans un cercle ; chaque contact transmet l'infection (ici 3 contacts = infectée, niveau de liquide vert visible dans chaque bille) ; compteur « 49 HEALTHY » qui descend à 0, dernier survivant mis en valeur (halo d'accent), capture finale au ralenti + onde. Thème Halloween / zombie possible (infectées lentes). « Can anyone survive? ». (ajout auto 2026-10-30 : mécanique émergente d'escalade, réalisée en Patient Zero)
+
 On peut combiner deux familles (destruction + œufs, roulette + chats…).
 
 ## ✏️ Banque d'idées (pas encore faites)
@@ -73,6 +75,8 @@ On peut combiner deux familles (destruction + œufs, roulette + chats…).
 - Combien de balles pour remplir la Tour Eiffel
 - Série « Laser Royale — Round N » : mêmes 8 drapeaux, nouvelle graine, autre arène (hexagone, cercle qui tourne) ; « Who wins round 2? » (ajout auto 2026-10-29 : format battle royale multi-pays qui pousse à commenter son pays)
 - Série « Cat Battle Episode N » : mêmes 4 chats, classement des victoires cumulé affiché, « Who wins episode 2? » (ajout auto 2026-10-28 : les ball battles tournent en séries récurrentes, fidélise)
+
+- Conquête de territoire (« territory war ») : 4 billes de couleur, arène en cases ; chaque bille repeint les cases qu'elle touche et rebondit sur celles des autres ; compteur « % » du leader, une couleur à 0 % est éliminée. (ajout auto 2026-10-30 : format repéré pendant la veille)
 
 ## ✏️ Personnages
 - Objet principal : une boule/bille la plupart du temps (~3 vidéos sur 4). De temps en temps un autre objet pour surprendre (cube, œuf, goutte, gemme, sphère en bois ou métal à découper, fruit, pièce, dé, hexagone, ressort, personnage simple dessiné en code). Jamais 2 vidéos de suite sans boule. (Yanis)
@@ -125,6 +129,7 @@ On peut combiner deux familles (destruction + œufs, roulette + chats…).
 - Néon qui s'éteint : dessiner les traits fins sur un calque noir ajouté en mode ADDITIF (ImageChops.add) et non directement sur l'image, sinon un trait qui s'estompe devient une ligne sombre sur le halo. Flou de mouvement propre : moyenne de 4 collages du sprite sur un recadrage autour de la boule (obturateur 180°) ; 2 copies fantômes donnent un effet « pièces empilées ». (ajout auto 2026-10-29 : rendu de laser-royale.py)
 - Match de foot (concepts/match-che-mun.py) : simuler dans le repère du but (la balle marquée est « attrapée » par le filet qui tourne avec l'ouverture, coordonnées polaires relatives au but), poteaux = petits cercles qui font rebondir (sinon traversée de l'arête). Chercher la graine en parallèle avec des critères de scénario (4-7 buts, au moins une égalisation, but décisif entre 84' et 90', buts espacés de 6 min) : la vidéo raconte alors un vrai match. Si la balle gagnante sort au dernier but, la faire réapparaître au centre au coup de sifflet final. (ajout auto 2026-10-30 : réglage de match-che-mun.py)
 - Texte : chrono à cellules fixes par caractère (chiffres 56 px, apostrophe 30 px) pour que les minutes ne « sautent » pas ; confettis coupés au-dessus de la zone du titre et dessinés AVANT les balles pour ne jamais masquer l'objet principal. Environnement : utiliser `python3.13` (python3 n'a pas numpy). (ajout auto 2026-10-30 : rendu de match-che-mun.py)
+- Contamination (concepts/patient-zero.py) : dans un gaz de 50-100 billes, « 1 contact = infecté » contamine tout en 3 s. Pour 25-30 s : 3 contacts nécessaires (anti-rebond 0,25 s par victime), infectées lentes (50 px/s) contre saines rapides (150 px/s), incubation 0,6 s, puis recherche de graine en visant un dernier survivant seul pendant 2-3 s. Calque de lueur au quart de résolution : taille W*S/4 et coordonnées ×S/4 (sinon les halos partent en bas à droite). Flash final en ajout additif d'une faible couleur, pas en Image.blend (voile gris). (ajout auto 2026-10-30 : réglage de patient-zero.py)
 
 ---
 
@@ -143,3 +148,4 @@ On peut combiner deux familles (destruction + œufs, roulette + chats…).
 - 2026-10-29 : (auto) 2 astuces techniques (fumée/vapeur en mélange normal, filtre audio sans débordement + limiteur doux).
 - 2026-10-29 : (auto) 2 astuces techniques (équilibrage battle royale à lasers, néon additif + flou de mouvement) + idée « Laser Royale — Round N » ; « Cordes entre impacts » retirée de la banque (réalisée en Laser Royale).
 - 2026-10-30 : (auto) 2 astuces techniques (match de foot : scénario par recherche de graine, but rotatif ; chrono à cellules fixes, confettis, python3.13).
+- 2026-10-30 : (auto) famille « o) Contamination », idée « Conquête de territoire », astuce réglage contamination + lueur/flash (patient-zero.py).
