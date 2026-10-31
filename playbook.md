@@ -131,6 +131,7 @@ On peut combiner deux familles (destruction + œufs, roulette + chats…).
 - Texte : chrono à cellules fixes par caractère (chiffres 56 px, apostrophe 30 px) pour que les minutes ne « sautent » pas ; confettis coupés au-dessus de la zone du titre et dessinés AVANT les balles pour ne jamais masquer l'objet principal. Environnement : utiliser `python3.13` (python3 n'a pas numpy). (ajout auto 2026-10-30 : rendu de match-che-mun.py)
 - Contamination (concepts/patient-zero.py) : dans un gaz de 50-100 billes, « 1 contact = infecté » contamine tout en 3 s. Pour 25-30 s : 3 contacts nécessaires (anti-rebond 0,25 s par victime), infectées lentes (50 px/s) contre saines rapides (150 px/s), incubation 0,6 s, puis recherche de graine en visant un dernier survivant seul pendant 2-3 s. Calque de lueur au quart de résolution : taille W*S/4 et coordonnées ×S/4 (sinon les halos partent en bas à droite). Flash final en ajout additif d'une faible couleur, pas en Image.blend (voile gris). (ajout auto 2026-10-30 : réglage de patient-zero.py)
 
+- String Circle (concepts/string-duel.py) : une ligne droite à travers l'arène croise en moyenne la MOITIÉ des fils adverses (ils partent tous de la balle adverse) pour +1 fil gagné au mur → un duel dure 2 à 10 s, jamais 50 s. Solution : match en manches (« first to 3 »), K.O. = point, chaque manche repart à 10 fils qui poussent de la balle vers le bord (0,3 s), pause de 1,15 s ; recherche de graine visant 5 manches de 6 à 9 s avec deux égalisations. Le true peak remonte après l'encodage AAC : viser TP -3 dans loudnorm. (ajout auto 2026-10-31 : réglage de string-duel.py)
 ---
 
 ## Journal des modifications
@@ -149,3 +150,4 @@ On peut combiner deux familles (destruction + œufs, roulette + chats…).
 - 2026-10-29 : (auto) 2 astuces techniques (équilibrage battle royale à lasers, néon additif + flou de mouvement) + idée « Laser Royale — Round N » ; « Cordes entre impacts » retirée de la banque (réalisée en Laser Royale).
 - 2026-10-30 : (auto) 2 astuces techniques (match de foot : scénario par recherche de graine, but rotatif ; chrono à cellules fixes, confettis, python3.13).
 - 2026-10-30 : (auto) famille « o) Contamination », idée « Conquête de territoire », astuce réglage contamination + lueur/flash (patient-zero.py).
+- 2026-10-31 : (auto) astuce String Circle (équilibre coupe/gain → manches, true peak après AAC).
