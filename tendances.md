@@ -34,3 +34,6 @@
 - https://www.chelseafc.com/en/news/article/chelseas-2026-27-premier-league-fixtures-announced
 - https://breakingthelines.com/@btl/chelsea-vs-manchester-united-what-a-win-draw-or-loss-means-for-2026-27-premier-league
 - https://fanbanter.co.uk/premier-league-fixtures-results/
+
+## Veille du 2026-10-31
+- Liverpool – Arsenal confirmé dim. 1er nov. 16:30 UK (avis d'amendements Premier League + calendrier NBC) → vidéo foot faite (match-liv-ars).
