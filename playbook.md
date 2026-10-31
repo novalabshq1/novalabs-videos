@@ -58,6 +58,8 @@ n) **Course de personnages (série "Square Race")** : 6 à 10 petits personnages
 
 o) **Contamination** : une bille infectée parmi des dizaines de billes saines dans un cercle ; chaque contact transmet l'infection (ici 3 contacts = infectée, niveau de liquide vert visible dans chaque bille) ; compteur « 49 HEALTHY » qui descend à 0, dernier survivant mis en valeur (halo d'accent), capture finale au ralenti + onde. Thème Halloween / zombie possible (infectées lentes). « Can anyone survive? ». (ajout auto 2026-10-30 : mécanique émergente d'escalade, réalisée en Patient Zero)
 
+p) **Construction / mur qui se ferme** : chaque rebond de la bille pose une brique sur la paroi, l'arène rétrécit couche par couche jusqu'à ce que la bille soit scellée, puis le mur éclate. « How many bricks until it's trapped? ». (ajout auto 2026-10-31 : réalisée en Brick Ring)
+
 On peut combiner deux familles (destruction + œufs, roulette + chats…).
 
 ## ✏️ Banque d'idées (pas encore faites)
@@ -130,6 +132,7 @@ On peut combiner deux familles (destruction + œufs, roulette + chats…).
 - Match de foot (concepts/match-che-mun.py) : simuler dans le repère du but (la balle marquée est « attrapée » par le filet qui tourne avec l'ouverture, coordonnées polaires relatives au but), poteaux = petits cercles qui font rebondir (sinon traversée de l'arête). Chercher la graine en parallèle avec des critères de scénario (4-7 buts, au moins une égalisation, but décisif entre 84' et 90', buts espacés de 6 min) : la vidéo raconte alors un vrai match. Si la balle gagnante sort au dernier but, la faire réapparaître au centre au coup de sifflet final. (ajout auto 2026-10-30 : réglage de match-che-mun.py)
 - Texte : chrono à cellules fixes par caractère (chiffres 56 px, apostrophe 30 px) pour que les minutes ne « sautent » pas ; confettis coupés au-dessus de la zone du titre et dessinés AVANT les balles pour ne jamais masquer l'objet principal. Environnement : utiliser `python3.13` (python3 n'a pas numpy). (ajout auto 2026-10-30 : rendu de match-che-mun.py)
 - Contamination (concepts/patient-zero.py) : dans un gaz de 50-100 billes, « 1 contact = infecté » contamine tout en 3 s. Pour 25-30 s : 3 contacts nécessaires (anti-rebond 0,25 s par victime), infectées lentes (50 px/s) contre saines rapides (150 px/s), incubation 0,6 s, puis recherche de graine en visant un dernier survivant seul pendant 2-3 s. Calque de lueur au quart de résolution : taille W*S/4 et coordonnées ×S/4 (sinon les halos partent en bas à droite). Flash final en ajout additif d'une faible couleur, pas en Image.blend (voile gris). (ajout auto 2026-10-30 : réglage de patient-zero.py)
+- Brick Ring (concepts/brick-ring.py) : une brique par rebond avec cooldown 0,075 s et brique validée seulement quand la bille s'est dégagée (sinon elle chevauche) ; briques réparties sur la case la plus basse proche du choc pour un anneau régulier ; vitesse de bille croissante (1500 → 2800 px/s) pour passer de 3 à 10 briques/s. Variable globale `mix` écrasée par l'audio dans le process principal casse les workers forkés : nommer l'audio `amix`. Après encodage AAC la crête vraie dépasse de ~1 dB : limiter à 0,66 avec alimiter puis vérifier ebur128 (cible ≤ -1 dBTP). (ajout auto 2026-10-31 : réglage de brick-ring.py)
 
 ---
 
@@ -149,3 +152,4 @@ On peut combiner deux familles (destruction + œufs, roulette + chats…).
 - 2026-10-29 : (auto) 2 astuces techniques (équilibrage battle royale à lasers, néon additif + flou de mouvement) + idée « Laser Royale — Round N » ; « Cordes entre impacts » retirée de la banque (réalisée en Laser Royale).
 - 2026-10-30 : (auto) 2 astuces techniques (match de foot : scénario par recherche de graine, but rotatif ; chrono à cellules fixes, confettis, python3.13).
 - 2026-10-30 : (auto) famille « o) Contamination », idée « Conquête de territoire », astuce réglage contamination + lueur/flash (patient-zero.py).
+- 2026-10-31 : (auto) famille « p) Construction / mur qui se ferme » + astuce de réglage brick-ring.
