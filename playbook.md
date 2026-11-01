@@ -65,7 +65,6 @@ On peut combiner deux familles (destruction + œufs, roulette + chats…).
 - Hexagone qui rétrécit
 - Pluie d'objets dans un entonnoir
 - Cercle à pics
-- Pendulum wave
 - Effet papillon
 - Œuf qui se fissure à chaque rebond et éclot
 - Chat qui grossit à chaque "FAH"
@@ -131,6 +130,8 @@ On peut combiner deux familles (destruction + œufs, roulette + chats…).
 - Texte : chrono à cellules fixes par caractère (chiffres 56 px, apostrophe 30 px) pour que les minutes ne « sautent » pas ; confettis coupés au-dessus de la zone du titre et dessinés AVANT les balles pour ne jamais masquer l'objet principal. Environnement : utiliser `python3.13` (python3 n'a pas numpy). (ajout auto 2026-10-30 : rendu de match-che-mun.py)
 - Contamination (concepts/patient-zero.py) : dans un gaz de 50-100 billes, « 1 contact = infecté » contamine tout en 3 s. Pour 25-30 s : 3 contacts nécessaires (anti-rebond 0,25 s par victime), infectées lentes (50 px/s) contre saines rapides (150 px/s), incubation 0,6 s, puis recherche de graine en visant un dernier survivant seul pendant 2-3 s. Calque de lueur au quart de résolution : taille W*S/4 et coordonnées ×S/4 (sinon les halos partent en bas à droite). Flash final en ajout additif d'une faible couleur, pas en Image.blend (voile gris). (ajout auto 2026-10-30 : réglage de patient-zero.py)
 
+- Pendulum wave (concepts/pendulum-wave.py) : mouvement analytique (x = A cos 2πf t, f_i = (K+i)/T), zéro bug physique ; la vidéo = exactement un cycle T démarré 1,6 s après l'alignement → boucle parfaite (dernière image = première) et audio bouclé en ajoutant les queues de sons modulo la durée. Caméra en diagonale (œil décalé de côté) : la vue de face donne une colonne étroite illisible. Un tic par point de retour à droite = 12,5 sons/s avec 15 pendules, glissandos naturels avant l'alignement. (ajout auto 2026-11-01 : réglage de pendulum-wave.py)
+
 ---
 
 ## Journal des modifications
@@ -149,3 +150,4 @@ On peut combiner deux familles (destruction + œufs, roulette + chats…).
 - 2026-10-29 : (auto) 2 astuces techniques (équilibrage battle royale à lasers, néon additif + flou de mouvement) + idée « Laser Royale — Round N » ; « Cordes entre impacts » retirée de la banque (réalisée en Laser Royale).
 - 2026-10-30 : (auto) 2 astuces techniques (match de foot : scénario par recherche de graine, but rotatif ; chrono à cellules fixes, confettis, python3.13).
 - 2026-10-30 : (auto) famille « o) Contamination », idée « Conquête de territoire », astuce réglage contamination + lueur/flash (patient-zero.py).
+- 2026-11-01 : (auto) astuce pendulum wave (boucle parfaite, caméra diagonale) ; « Pendulum wave » retirée de la banque (réalisée).
