@@ -31,9 +31,13 @@ def snap_B(f):
     thwap = np.convolve(nz, np.ones(14) / 14, 'same') * np.exp(-t / 0.012)
     return 0.18 * crack + 0.7 * body + 0.5 * thwap
 
+# ONE snap sound for the WHOLE video: "C" (70 % of String Circle videos) or "B" (30 %).
+# Usage: python3 audio.py DURATION C|B   (the task picks C or B from journal.md to keep 7/3 over 10 videos)
+SNAP = sys.argv[2].upper() if len(sys.argv) > 2 else ('C' if np.random.default_rng().random() < 0.7 else 'B')
+assert SNAP in ('C', 'B'), SNAP
+print('snap sound for this video:', SNAP)
 def twang(f):
-    # each string that snaps: 70 % sound C, 30 % sound B (random per string)
-    return snap_C(f) if rng.random() < 0.7 else snap_B(f)
+    return snap_C(f) if SNAP == 'C' else snap_B(f)
 
 def die_hit():
     # same "crunch-pop" as the Spike Escape spike hit (validated by Yanis)
