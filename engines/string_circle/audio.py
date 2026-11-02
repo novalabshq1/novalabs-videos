@@ -10,16 +10,30 @@ def add(sig, t, gain, pan):
     i = int(t * SR); j = min(N, i + len(sig)); s = sig[:j - i] * gain
     L[i:j] += s * np.sqrt(1 - pan); Rt[i:j] += s * np.sqrt(pan)
 
-def twang(f):
-    # elastic band letting go: sharp filtered crack + short high "tchak" falling fast
-    n = int(0.16 * SR); t = np.arange(n) / SR
+def snap_C(f):
+    # C (70 %) : aigu et sec, petit "tic" de fil fin qui casse — validé par Yanis
+    n = int(0.09 * SR); t = np.arange(n) / SR
     nz = rng.standard_normal(n)
-    crack = np.diff(np.diff(nz, prepend=0), prepend=0) * np.exp(-t / 0.0025)
-    fi = 250 * f + 650 * f * np.exp(-t / 0.012)
+    crack = np.diff(np.diff(nz, prepend=0), prepend=0) * np.exp(-t / 0.0015)
+    fi = 700 * f + 1300 * f * np.exp(-t / 0.008)
     ph = 2 * np.pi * np.cumsum(fi) / SR
-    body = (np.sin(ph) + 0.35 * np.sin(2 * ph)) * np.exp(-t / 0.035) * (1 - np.exp(-t / 0.0004))
-    thwap = np.convolve(nz, np.ones(6) / 6, 'same') * np.exp(-t / 0.008)
-    return 0.22 * crack + 0.55 * body + 0.35 * thwap
+    body = np.sin(ph) * np.exp(-t / 0.02) * (1 - np.exp(-t / 0.0003))
+    return 0.25 * crack + 0.6 * body
+
+def snap_B(f):
+    # B (30 %) : grave et épais, gros élastique qui claque "THWACK" — validé par Yanis
+    n = int(0.22 * SR); t = np.arange(n) / SR
+    nz = rng.standard_normal(n)
+    crack = np.diff(nz, prepend=0) * np.exp(-t / 0.003)
+    fi = 120 * f + 380 * f * np.exp(-t / 0.018)
+    ph = 2 * np.pi * np.cumsum(fi) / SR
+    body = (np.sin(ph) + 0.5 * np.sin(2 * ph) + 0.25 * np.sin(3 * ph)) * np.exp(-t / 0.06) * (1 - np.exp(-t / 0.0006))
+    thwap = np.convolve(nz, np.ones(14) / 14, 'same') * np.exp(-t / 0.012)
+    return 0.18 * crack + 0.7 * body + 0.5 * thwap
+
+def twang(f):
+    # each string that snaps: 70 % sound C, 30 % sound B (random per string)
+    return snap_C(f) if rng.random() < 0.7 else snap_B(f)
 
 def die_hit():
     # same "crunch-pop" as the Spike Escape spike hit (validated by Yanis)
