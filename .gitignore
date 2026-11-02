@@ -1,2 +1,6 @@
 __pycache__/
 *.pyc
+engines/string_circle/audio.wav
+engines/string_circle/events.npy
+engines/string_circle/final.mp4
+engines/string_circle/video_noaudio.mp4
