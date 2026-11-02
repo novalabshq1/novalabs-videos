@@ -21,6 +21,14 @@ def twang(f):
     thwap = np.convolve(nz, np.ones(6) / 6, 'same') * np.exp(-t / 0.008)
     return 0.22 * crack + 0.55 * body + 0.35 * thwap
 
+def die_hit():
+    # same "crunch-pop" as the Spike Escape spike hit (validated by Yanis)
+    n = int(0.3 * SR); t = np.arange(n) / SR
+    fr = 120 + 700 * np.exp(-t / 0.02)
+    s = np.sin(2 * np.pi * np.cumsum(fr) / SR) * np.exp(-t / 0.07)
+    nz = np.convolve(rng.standard_normal(n), np.ones(5) / 5, 'same') * np.exp(-t / 0.012)
+    return 0.8 * s + 0.6 * nz
+
 def pluck(f):
     n = int(0.18 * SR); p = int(SR / f)
     buf = rng.uniform(-1, 1, p); out = np.zeros(n)
@@ -54,9 +62,9 @@ last_snap = -1
 for t, k, x in ev:
     k = int(k)
     if k == 0:
-        add(pl[rng.integers(len(pl))], t, 0.10, rng.uniform(0.3, 0.7))
+        add(die_hit(), t, 0.42, rng.uniform(0.3, 0.7))   # ball touches the circle
     elif k == 1:
-        add(tok(), t, 0.22, 0.5)
+        add(die_hit(), t, 0.48, 0.5)                      # two countries collide
     elif k == 2:
         j = int(x)                       # j-th string cut in the same substep
         add(twang(rng.uniform(0.85, 1.2)), t + j * 0.011, 0.5, rng.uniform(0.25, 0.75))
