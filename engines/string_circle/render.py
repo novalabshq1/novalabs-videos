@@ -6,7 +6,7 @@ sim.POSF = float(sys.argv[4]); sim.SPREAD = float(sys.argv[5]); sim.JIT = float(
 from render_spec import SPEC
 SEED, SPEED, N0 = int(sys.argv[1]), int(sys.argv[3]), 35
 OUT = sys.argv[2]
-TITLE = b"WHICH COUNTRY WINS?"
+TITLE = b"WHO RULES AFRICA?"
 
 res = sim.run(SPEC, SEED, SPEED, N0, record=True)
 frames = res['frames']; snaps = res['snaps']; deaths = res['deaths']
@@ -60,6 +60,40 @@ def flag(name, x, y, r):
         for i, col in enumerate(['#002395', '#FFFFFF', '#ED2939']):
             cr.rectangle(c, x - r + i * 2 * r / 3, y - r, 2 * r / 3 + 0.5, 2 * r)
             cr.set_rgb(c, *hexrgb(col)); cr.fill(c)
+    elif name == "Nigeria":
+        for i, col in enumerate(['#008751', '#FFFFFF', '#008751']):
+            cr.rectangle(c, x - r + i * 2 * r / 3, y - r, 2 * r / 3 + 0.5, 2 * r)
+            cr.set_rgb(c, *hexrgb(col)); cr.fill(c)
+    elif name == "Cameroon":
+        for i, col in enumerate(['#007A5E', '#CE1126', '#FCD116']):
+            cr.rectangle(c, x - r + i * 2 * r / 3, y - r, 2 * r / 3 + 0.5, 2 * r)
+            cr.set_rgb(c, *hexrgb(col)); cr.fill(c)
+        star(x, y, r / 3, r / 3 * 0.381966, -math.pi / 2, hexrgb('#FCD116'))
+    elif name == "Ghana":
+        for i, col in enumerate(['#CE1126', '#FCD116', '#006B3F']):
+            cr.rectangle(c, x - r, y - r + i * 2 * r / 3, 2 * r, 2 * r / 3 + 0.5)
+            cr.set_rgb(c, *hexrgb(col)); cr.fill(c)
+        star(x, y, r / 3, r / 3 * 0.381966, -math.pi / 2, (0, 0, 0))
+    elif name == "South Africa":
+        u = r / 3                       # flag 9x6 units, height = ball diameter
+        ox, oy = x + 0.25 * r - 4.5 * u, y - 3 * u
+        P = lambda a, b: (ox + a * u, oy + b * u)
+        cr.rectangle(c, ox, oy, 9 * u, 3 * u); cr.set_rgb(c, *hexrgb('#E03C31')); cr.fill(c)
+        cr.rectangle(c, ox, oy + 3 * u, 9 * u, 3 * u); cr.set_rgb(c, *hexrgb('#001489')); cr.fill(c)
+        cr.set_line_join(c, 0); cr.set_line_cap(c, 0)
+        def ypath():
+            cr.new_path(c); cr.move_to(c, *P(0, 0)); cr.line_to(c, *P(4.5, 3)); cr.line_to(c, *P(9.5, 3))
+            cr.move_to(c, *P(0, 6)); cr.line_to(c, *P(4.5, 3))
+        def tri():
+            cr.new_path(c); cr.move_to(c, *P(0, 0)); cr.line_to(c, *P(4.5, 3)); cr.line_to(c, *P(0, 6)); cr.close_path(c)
+        ypath(); cr.set_line_width(c, 2 * u); cr.set_rgb(c, 1, 1, 1); cr.stroke(c)
+        tri(); cr.set_rgb(c, 0, 0, 0); cr.fill(c)
+        cr.save(c); tri(); cr.clip(c)
+        cr.new_path(c); cr.move_to(c, *P(0, 0)); cr.line_to(c, *P(4.5, 3)); cr.line_to(c, *P(0, 6))
+        cr.set_line_width(c, 2 * u); cr.set_rgb(c, *hexrgb('#FFB81C')); cr.stroke(c)
+        cr.restore(c)
+        ypath(); cr.set_line_width(c, 1.2 * u); cr.set_rgb(c, *hexrgb('#007749')); cr.stroke(c)
+        cr.set_line_join(c, 1); cr.set_line_cap(c, 1)
     cr.restore(c)
 
 def ball(name, col, x, y):
