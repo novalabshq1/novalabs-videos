@@ -4,6 +4,7 @@ E.MAX_TRIES = 45; E.ROT = 0; E.NSPK = 88; E.SPK_HALF = math.pi / 88; E.SPK_H = 6
 E.GAP_AT = math.radians(150); E.G = 400; E.V0 = 360; E.GAP = math.radians(20); E.SPIKES = E.spike_angles()
 SEED = int(sys.argv[1]); OUT = sys.argv[2]
 TITLE = b"CAN ONE ESCAPE?"
+ZOOM = 1.04   # camera zoom validated by Yanis (physics unchanged)
 W, H, CX, CY, RO, RI, BR = E.W, E.H, E.CX, E.CY, E.RO, E.RI, E.BR
 
 res = E.run(SEED, record=True)
@@ -51,6 +52,7 @@ NSEG = 200
 for fi, fr in enumerate(frames):
     t = fr['t']; phi = fr['phi']
     cr.set_rgb(c, *BG); cr.paint(c)
+    cr.identity_matrix(c); cr.translate(c, CX, CY); cr.scale(c, ZOOM, ZOOM); cr.translate(c, -CX, -CY)
     for (sx, sy, sr, sa, vx, vy) in stars:
         x = (sx + vx * t) % W; y = (sy + vy * t) % H
         cr.new_path(c); cr.arc(c, x, y, sr, 0, 2 * math.pi); cr.set_rgba(c, 0.75, 0.85, 1.0, sa); cr.fill(c)
@@ -94,6 +96,7 @@ for fi, fr in enumerate(frames):
         x, y = x0 + vx * k, y0 + vy * k + 150 * dt * dt
         cr.new_path(c); cr.arc(c, x, y, r0 * (1 - dt / life), 0, 2 * math.pi)
         cr.set_rgba(c, *pcol, 1 - dt / life); cr.fill(c)
+    cr.identity_matrix(c)
     cr.select_font(c, b"Poppins", 0, 1); cr.set_font_size(c, 56)
     cr.move_to(c, TX, TY); cr.set_rgb(c, 1, 1, 1); cr.show_text(c, TITLE)
     cr.flush(surf)
