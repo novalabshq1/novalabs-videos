@@ -6,7 +6,7 @@ sim.POSF = float(sys.argv[4]); sim.SPREAD = float(sys.argv[5]); sim.JIT = float(
 from render_spec import SPEC
 SEED, SPEED, N0 = int(sys.argv[1]), int(sys.argv[3]), 35
 OUT = sys.argv[2]
-TITLE = b"WHICH COUNTRY WINS?"
+TITLE = b"WHO RULES SOUTH AMERICA?"
 
 res = sim.run(SPEC, SEED, SPEED, N0, record=True)
 frames = res['frames']; snaps = res['snaps']; deaths = res['deaths']
@@ -59,6 +59,22 @@ def flag(name, x, y, r):
     elif name == "France":
         for i, col in enumerate(['#002395', '#FFFFFF', '#ED2939']):
             cr.rectangle(c, x - r + i * 2 * r / 3, y - r, 2 * r / 3 + 0.5, 2 * r)
+            cr.set_rgb(c, *hexrgb(col)); cr.fill(c)
+    elif name == "Colombia":
+        for (y0, hh, col) in [(-1, 1.0, '#FCD116'), (0, 0.5, '#003893'), (0.5, 0.5, '#CE1126')]:
+            cr.rectangle(c, x - r, y + y0 * r, 2 * r, hh * r + 0.5); cr.set_rgb(c, *hexrgb(col)); cr.fill(c)
+    elif name == "Peru":
+        for i, col in enumerate(['#D91023', '#FFFFFF', '#D91023']):
+            cr.rectangle(c, x - r + i * 2 * r / 3, y - r, 2 * r / 3 + 0.5, 2 * r)
+            cr.set_rgb(c, *hexrgb(col)); cr.fill(c)
+    elif name == "Chile":
+        cr.rectangle(c, x - r, y - r, 2 * r, r + 0.5); cr.set_rgb(c, 1, 1, 1); cr.fill(c)
+        cr.rectangle(c, x - r, y, 2 * r, r); cr.set_rgb(c, *hexrgb('#D52B1E')); cr.fill(c)
+        cr.rectangle(c, x - r, y - r, r, r); cr.set_rgb(c, *hexrgb('#0039A6')); cr.fill(c)
+        star(x - 0.5 * r, y - 0.5 * r, 0.25 * r, 0.25 * r * 0.382, -math.pi / 2, (1, 1, 1))
+    elif name == "Bolivia":
+        for i, col in enumerate(['#DA291C', '#F4E400', '#007A33']):
+            cr.rectangle(c, x - r, y - r + i * 2 * r / 3, 2 * r, 2 * r / 3 + 0.5)
             cr.set_rgb(c, *hexrgb(col)); cr.fill(c)
     cr.restore(c)
 
