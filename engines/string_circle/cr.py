@@ -38,3 +38,6 @@ class TE(C.Structure):
     _fields_ = [(n, D) for n in "xb yb w h xa ya".split()]
 text_extents = f('cairo_text_extents', [P, C.c_char_p, C.POINTER(TE)])
 arc_negative = f('cairo_arc_negative', [P, D, D, D, D, D])
+translate = f('cairo_translate', [P, D, D])
+scale = f('cairo_scale', [P, D, D])
+identity_matrix = f('cairo_identity_matrix', [P])

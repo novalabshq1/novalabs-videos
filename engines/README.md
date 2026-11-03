@@ -12,6 +12,12 @@ cd engines/string_circle
 5. ffmpeg -y -i video_noaudio.mp4 -i audio.wav -c:v copy -c:a aac -b:a 192k -shortest final.mp4
 (Change le titre via TITLE dans render.py.)
 
+### Screamer (seulement quand le prompt le demande, environ 1 vidéo de pays sur 5)
+6. python3 screamer.py                      -> scream_v.mp4 (0,9 s)
+7. python3 scream_audio.py T                -> audio_scream.wav (T = seconde du screamer, ex. 31.0)
+8. ffmpeg -y -i video_noaudio.mp4 -i scream_v.mp4 -i audio_scream.wav -filter_complex "[1:v]setpts=PTS-STARTPTS+T/TB[s];[0:v][s]overlay=0:0:enable='between(t,T,T+0.9)':eof_action=pass[v]" -map "[v]" -map 2:a -c:v libx264 -preset veryfast -crf 17 -pix_fmt yuv420p -c:a aac -b:a 192k -shortest final.mp4
+   (remplace T par la même valeur partout ; cette commande remplace l'étape 5)
+
 ## spike_escape (anneau fixe à pics, balles mortes = obstacles gris)
 cd engines/spike_escape
 1. python3 search.py 0 600  -> graines valides (faux espoirs au début inclus).
