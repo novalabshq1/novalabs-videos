@@ -1,0 +1,7 @@
+# Journal
+
+| Date | Format | Pays | Gagnant | Son de fil | Durée | Liens |
+|---|---|---|---|---|---|---|
+| 2026-11-02 | STRING CIRCLE | Nigeria / Ghana / South Africa / Cameroon (seed 78, titre « WHO RULES AFRICA? ») | Cameroon (retournement : 1-2 fils pendant ~25 s) | C | 55,5 s | TikTok ✅ (Zernio 6ae8c8ad7e9f911ed62a4803), YouTube ✅ (Zernio 6ae8c8bf6337688d2b132445), Instagram ❌ (aucun compte Instagram connecté à Zernio) — videos/2026-11-02-string-circle-africa.mp4 |
+| 2026-11-03 | STRING CIRCLE | Colombie / Pérou / Chili / Bolivie (titre « WHO RULES SOUTH AMERICA? », graine 78) | Bolivie (a tenu 26 s avec 1-2 fils puis a gagné) | C | 55,5 s | TikTok @novalabs.hq : publié (Zernio 6aea180a14d26f86a8949611) ; YouTube @novalabs.hq1 : publié (Zernio 6aea181a14d26f86a89496a0) ; Instagram : ÉCHEC, aucun compte Instagram connecté à Zernio ; fichier videos/2026-11-03-string-circle-col-per-chi-bol.mp4 |
+| 2026-11-04 | STRING CIRCLE | France / Allemagne / Italie / Angleterre (titre « WHO RULES EUROPE? », graine 319 ; graine 78 évitée car déjà utilisée le 02 et le 03) | Italie (retournement : tombée à 3 fils vers 12 s, puis gagne le duel final contre l'Angleterre) | B | 53,2 s | TikTok @novalabs.hq : publié (Zernio 6aeb687655f1a14e088c935e) ; YouTube @novalabs.hq1 : publié (Zernio 6aeb6885f1567240dcfb599e) ; Instagram : ÉCHEC (2 essais), aucun compte Instagram connecté à Zernio ; fichier videos/2026-11-04-string-circle-fra-ger-ita-eng.mp4 |
