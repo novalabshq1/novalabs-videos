@@ -1,2 +1,7 @@
 __pycache__/
 *.pyc
+engines/*/audio.wav
+engines/*/events.npy
+engines/*/final.mp4
+engines/*/*noaudio.mp4
+engines/*/esc_audio.wav
