@@ -6,7 +6,7 @@ sim.POSF = float(sys.argv[4]); sim.SPREAD = float(sys.argv[5]); sim.JIT = float(
 from render_spec import SPEC
 SEED, SPEED, N0 = int(sys.argv[1]), int(sys.argv[3]), 35
 OUT = sys.argv[2]
-TITLE = b"WHICH COUNTRY WINS?"
+TITLE = b"WHO RULES EUROPE?"
 
 res = sim.run(SPEC, SEED, SPEED, N0, record=True)
 frames = res['frames']; snaps = res['snaps']; deaths = res['deaths']
@@ -60,6 +60,15 @@ def flag(name, x, y, r):
         for i, col in enumerate(['#002395', '#FFFFFF', '#ED2939']):
             cr.rectangle(c, x - r + i * 2 * r / 3, y - r, 2 * r / 3 + 0.5, 2 * r)
             cr.set_rgb(c, *hexrgb(col)); cr.fill(c)
+    elif name == "Italy":
+        for i, col in enumerate(['#009246', '#FFFFFF', '#CE2B37']):
+            cr.rectangle(c, x - r + i * 2 * r / 3, y - r, 2 * r / 3 + 0.5, 2 * r)
+            cr.set_rgb(c, *hexrgb(col)); cr.fill(c)
+    elif name == "England":
+        cr.rectangle(c, x - r, y - r, 2 * r, 2 * r); cr.set_rgb(c, 1, 1, 1); cr.fill(c)
+        red = hexrgb('#CE1124'); hw = 0.2 * r
+        cr.rectangle(c, x - hw, y - r, 2 * hw, 2 * r); cr.set_rgb(c, *red); cr.fill(c)
+        cr.rectangle(c, x - r, y - hw, 2 * r, 2 * hw); cr.set_rgb(c, *red); cr.fill(c)
     cr.restore(c)
 
 def ball(name, col, x, y):
