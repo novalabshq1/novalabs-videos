@@ -24,3 +24,11 @@ cd engines/spike_escape
 2. python3 render_esc.py SEED esc_noaudio.mp4   (couleurs de l'anneau : C1/CM/C2 ; titre : TITLE)
 3. python3 audio_esc.py $(ffprobe -v error -show_entries format=duration -of csv=p=0 esc_noaudio.mp4)
 4. ffmpeg -y -i esc_noaudio.mp4 -i esc_audio.wav -c:v copy -c:a aac -b:a 192k -shortest final.mp4
+
+## escape_wider_gap (ESCAPE du soir, règle WIDER GAP : chaque mort élargit l'ouverture, toujours en bas)
+cd engines/escape_wider_gap
+1. python3 search.py 0 600 GAP0 STEP [MIN_LAST_TRY]  -> graines valides (ex. 14 2 4.5)
+2. CRF=14 X264=filler=1 python3 render.py SEED final.mp4 GAP0 STEP [frames clés séparées par des virgules -> key_*.npy]
+   (fait la simu, l'audio et l'encodage final aux flags TikTok ; filler=1 bourre jusqu'au maxrate 25M pour dépasser 12 Mb/s
+   sur ce fond noir, sans changer l'image ; le fichier fait alors ~135 Mo : > 100 Mo, ne pas le committer, committer la version sans X264)
+3. python3 qc_frames.py (cadrage sur key_*.npy) ; python3 qc_logs.py (physique, règle, évasion)
