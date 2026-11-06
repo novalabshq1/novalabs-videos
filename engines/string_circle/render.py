@@ -6,7 +6,7 @@ sim.POSF = float(sys.argv[4]); sim.SPREAD = float(sys.argv[5]); sim.JIT = float(
 from render_spec import SPEC
 SEED, SPEED, N0 = int(sys.argv[1]), int(sys.argv[3]), 35
 OUT = sys.argv[2]
-TITLE = b"WHICH COUNTRY WINS?"
+TITLE = b"2030 WORLD CUP WINNER?"
 
 res = sim.run(SPEC, SEED, SPEED, N0, record=True)
 frames = res['frames']; snaps = res['snaps']; deaths = res['deaths']
@@ -56,6 +56,18 @@ def flag(name, x, y, r):
         for i, col in enumerate(['#000000', '#DD0000', '#FFCE00']):
             cr.rectangle(c, x - r, y - r + i * 2 * r / 3, 2 * r, 2 * r / 3 + 0.5)
             cr.set_rgb(c, *hexrgb(col)); cr.fill(c)
+    elif name == "Colombia":
+        for (y0, hh, col) in [(-1, 1.0, '#FCD116'), (0, 0.5, '#003893'), (0.5, 0.5, '#CE1126')]:
+            cr.rectangle(c, x - r, y + y0 * r, 2 * r, hh * r + 0.5)
+            cr.set_rgb(c, *hexrgb(col)); cr.fill(c)
+    elif name == "Japan":
+        cr.rectangle(c, x - r, y - r, 2 * r, 2 * r); cr.set_rgb(c, 1, 1, 1); cr.fill(c)
+        cr.new_path(c); cr.arc(c, x, y, 0.6 * r, 0, 2 * math.pi)
+        cr.set_rgb(c, *hexrgb('#BC002D')); cr.fill(c)
+    elif name == "Nigeria":
+        for i, col in enumerate(['#008751', '#FFFFFF', '#008751']):
+            cr.rectangle(c, x - r + i * 2 * r / 3, y - r, 2 * r / 3 + 0.5, 2 * r)
+            cr.set_rgb(c, *hexrgb(col)); cr.fill(c)
     elif name == "France":
         for i, col in enumerate(['#002395', '#FFFFFF', '#ED2939']):
             cr.rectangle(c, x - r + i * 2 * r / 3, y - r, 2 * r / 3 + 0.5, 2 * r)
@@ -84,14 +96,15 @@ for (t0, p, col) in deaths:
         parts.append((t0, p[0], p[1], s * math.cos(a), s * math.sin(a), rng.uniform(3, 7), col))
 
 ff = subprocess.Popen(['ffmpeg', '-y', '-loglevel', 'error', '-f', 'rawvideo', '-pix_fmt', 'bgra',
-                       '-s', f'{W}x{H}', '-r', str(FPS), '-i', '-', '-c:v', 'libx264', '-preset', 'veryfast',
-                       '-crf', '17', '-pix_fmt', 'yuv420p', OUT], stdin=subprocess.PIPE)
+                       '-s', f'{W}x{H}', '-r', str(FPS), '-i', '-', '-c:v', 'libx264', '-profile:v', 'high', '-level', '4.2', '-pix_fmt', 'yuv420p', '-preset', 'slow',
+                       '-b:v', '16M', '-minrate', '16M', '-maxrate', '16M', '-bufsize', '32M', '-x264-params', 'nal-hrd=cbr', '-g', '120', '-colorspace', 'bt709',
+                       '-color_primaries', 'bt709', '-color_trc', 'bt709', OUT], stdin=subprocess.PIPE)
 cols = [s[1] for s in SPEC]; names = [s[0] for s in SPEC]
 for fi, fr in enumerate(frames):
     t = (fi + 1) / FPS
     cr.set_rgb(c, 0, 0, 0); cr.paint(c)
     # strings
-    cr.set_line_width(c, 1.3)
+    cr.set_line_width(c, 1.6)
     for (p, anc, alive), col in zip(fr, cols):
         if not alive or len(anc) == 0: continue
         cr.new_path(c)
@@ -105,7 +118,7 @@ for fi, fr in enumerate(frames):
         e = 1 - (1 - s) ** 2
         fx, fy = p0[0] + (an[0] - p0[0]) * e, p0[1] + (an[1] - p0[1]) * e
         cr.new_path(c); cr.move_to(c, an[0], an[1]); cr.line_to(c, fx, fy)
-        cr.set_line_width(c, 1.3); cr.set_rgba(c, *col, 0.85 * (1 - s)); cr.stroke(c)
+        cr.set_line_width(c, 1.6); cr.set_rgba(c, *col, 0.85 * (1 - s)); cr.stroke(c)
     # death particles
     for (t0, x0, y0, vx, vy, r0, col) in parts:
         dt = t - t0
