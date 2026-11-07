@@ -24,3 +24,9 @@ cd engines/spike_escape
 2. python3 render_esc.py SEED esc_noaudio.mp4   (couleurs de l'anneau : C1/CM/C2 ; titre : TITLE)
 3. python3 audio_esc.py $(ffprobe -v error -show_entries format=duration -of csv=p=0 esc_noaudio.mp4)
 4. ffmpeg -y -i esc_noaudio.mp4 -i esc_audio.wav -c:v copy -c:a aac -b:a 192k -shortest final.mp4
+
+## escape_spike (vidéo du soir ESCAPE : ouverture pile en bas, lancer fixe, screamer)
+cd engines/escape_spike
+1. python3 search.py 0 600 [GAP_DEG]  -> graines valides (30-45 s, ≥9 essais, faux espoirs)
+2. python3 face.py VARIANTE            -> face_base.png (visage procédural ; change la variante chaque soir)
+3. python3 render_esc.py SEED final.mp4 GAP_DEG [images,clés]  -> vidéo finale avec son et screamer, encodage TikTok
