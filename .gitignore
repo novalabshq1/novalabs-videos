@@ -5,3 +5,6 @@ __pycache__/
 *.frames.pkl
 *.mkv
 *.events.json
+concepts/*/k_*.png
+concepts/*/audio.wav
+concepts/*/final.mp4
