@@ -24,3 +24,18 @@ cd engines/spike_escape
 2. python3 render_esc.py SEED esc_noaudio.mp4   (couleurs de l'anneau : C1/CM/C2 ; titre : TITLE)
 3. python3 audio_esc.py $(ffprobe -v error -show_entries format=duration -of csv=p=0 esc_noaudio.mp4)
 4. ffmpeg -y -i esc_noaudio.mp4 -i esc_audio.wav -c:v copy -c:a aac -b:a 192k -shortest final.mp4
+
+## color_rush (vidéo de MIDI : formats COULEURS et PAYS, aucun texte)
+Bataille dans un cercle (R=450, centre 540,1075) : chaque balle (r=32) défend ses fils ancrés au bord ; un fil adverse touché (< 32 px) casse ; mur = +10 à 15 fils ; 0 fil = morte. Vitesse commune v(t) = 150 × e^(∫taux), taux = 0 avant FLAT, puis G + 0,012 × éliminées + RAMP × lissage((t − t2)/6). RAMP 0,45 (COULEURS) ou 0,22 (PAYS). Pas dt = min(1/120, 3/v), aligné sur les images à 60 fps.
+Dépendances : /usr/bin/python3 (numpy), libcairo via cr.py, ffmpeg. 4 processus en parallèle.
+cd engines/color_rush
+1. python3 search.py couleurs|pays N FLAT G 0 1500   -> graines valides (critères du prompt, triées par score)
+   Avec FLAT=10/20 aucune partie ne dure 45 s (médiane ~28-32 s) : FLAT=30, G=0,04 donne des parties de 45-50 s (2026-11-08).
+2. Écris spec.json : {"seed","n","ramp","flat","g","teams":[{"rgb":[r,g,b],"flag":null}, ...]} (index = balle de la simu ;
+   la simu ne dépend pas des équipes : choisis la partie, puis attribue couleurs/pays selon winner / dernier éliminé).
+   Format PAYS : mets "flag":"nom" et ajoute un module flags.py avec draw(ctx, nom, x, y, r) qui dessine le drapeau dans le disque (à créer au 1er usage).
+3. python3 render.py spec.json out_noaudio.mkv      -> vidéo sans son + out_noaudio.events.json (événements + logs QC)
+4. python3 audio.py out_noaudio.events.json audio.wav
+5. ffmpeg -i out_noaudio.mkv -i audio.wav -map 0:v -map 1:a <flags d'export du prompt> -shortest final.mp4
+QC : concepts/2026-11-08-midi-couleurs/qc.py (cadrage sur 14 images clés, zone du haut noire, logs physiques).
+Publication Zernio : call_tool media_get_media_presigned_url -> curl PUT du fichier -> posts_publish_now avec publicUrl.
