@@ -151,6 +151,9 @@ def draw_frame(ctx, fi, D, spec, flags_mod):
             continue
         x, y = CX + pos[b, 0], CY + pos[b, 1]
         c = cols[b]
+        blink = bool(fr['sur'][b])
+        if blink:   # sursis : clignote ~8 fois/s entre 25 % et 100 % de luminosité
+            cr.push_group(ctx)
         pat = cr.pattern_radial(x, y, sim.BR - 4, x, y, sim.BR + 14)
         cr.add_stop(pat, 0.0, c[0], c[1], c[2], 0.45)
         cr.add_stop(pat, 0.45, c[0], c[1], c[2], 0.18)
@@ -173,6 +176,10 @@ def draw_frame(ctx, fi, D, spec, flags_mod):
         cr.new_path(ctx)
         cr.arc(ctx, x, y, sim.BR - 1, 0, 2 * math.pi)
         cr.stroke(ctx)
+        if blink:
+            lum = 0.625 + 0.375 * math.cos(2 * math.pi * 8 * (t - fr['sur_t0'][b]))
+            cr.pop_group_to_source(ctx)
+            cr.paint_with_alpha(ctx, lum)
     # ---- cercle blanc 3 px, centre (540,1075), diamètre 900
     cr.set_rgb(ctx, 1, 1, 1)
     cr.set_line_width(ctx, 3.0)
@@ -201,10 +208,16 @@ def worker(k, f0, f1, dpath, spec, out):
 
 
 def prepare(spec):
-    r = sim.run(spec['seed'], spec['n'], spec['ramp'], flat=spec['flat'], g=spec['g'],
-                record=True, qc=True)
+    r = sim.run(spec['seed'], spec['n'], spec['ramp'], sursis=spec.get('sursis', 300.0),
+                g=spec['g'], flat=spec.get('flat', 0.0), record=True, qc=True)
     frames = r['frames']
     nfr = len(frames)
+    starts = {}
+    for f in frames:
+        for (ts, b) in r['sursis_log']:
+            if ts <= f['t'] + 1e-9:
+                starts[b] = ts
+        f['sur_t0'] = [starts.get(b, 0.0) for b in range(len(f['sur']))]
     bbf = {}
     for br in r['breaks']:
         f0 = int(math.ceil(br[0] * 60 - 1e-6))
@@ -227,7 +240,8 @@ if __name__ == '__main__':
     ev = dict(duration=nfr / 60.0, nframes=nfr, events=[list(e[:2]) + [float(e[2]), float(e[3]), e[4]]
                                                          for e in r['events']],
               elim=r['elim'], t2=r['t2'], t_win=r['t_win'], winner=r['winner'], mult=r['mult'],
-              qc=r['qc'], frame_times=[f['t'] for f in D['frames']])
+              qc=r['qc'], saves=r['saves'], sursis_log=r['sursis_log'], sursis=r['sursis'],
+              breaks=[[b[0], b[1], b[2]] for b in r['breaks']], frame_times=[f['t'] for f in D['frames']])
     json.dump(ev, open(base + '.events.json', 'w'), default=float)
     print('frames', nfr, 'duration', nfr / 60, 'winner', r['winner'], 'mult', r['mult'])
     bounds = np.linspace(0, nfr, NPROC + 1).astype(int)

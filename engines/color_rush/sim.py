@@ -3,7 +3,10 @@
 Règles exactes : voir engines/README.md (section color_rush).
 Coordonnées relatives au centre du cercle (le rendu ajoute (540, 1075)).
 
-    run(seed, n, ramp, flat=10, g=0.04, record=False, qc=False) -> dict
+    run(seed, n, ramp, sursis=300, g=0.02, flat=0, record=False, qc=False) -> dict
+
+SURSIS : 1 seul par balle ; la 1re fois à 0 fil, la balle peut encore parcourir `sursis` px.
+Si elle touche le mur avant : +10..15 fils, sauvée. Sinon (ou si sursis déjà utilisé) : morte.
 """
 import math
 import random
@@ -11,7 +14,7 @@ import numpy as np
 
 R = 450.0          # rayon de l'arène
 BR = 32.0          # rayon des balles
-V0 = 150.0         # vitesse de départ (px/s)
+V0 = 200.0         # vitesse de départ (px/s)
 FPS = 60
 PAUSE = 1.5        # pause finale sur la gagnante
 TMAX = 69.0        # au-delà : partie trop longue, on abandonne (sauf record)
@@ -67,7 +70,7 @@ def seg_dist2(px, py, threads, pos):
     return dx * dx + dy * dy
 
 
-def run(seed, n, ramp, flat=10.0, g=0.04, record=False, qc=False):
+def run(seed, n, ramp, sursis=300.0, g=0.02, flat=0.0, record=False, qc=False):
     rng = random.Random(seed)
     pos = np.zeros((n, 2))
     dirs = np.zeros((n, 2))
@@ -96,7 +99,11 @@ def run(seed, n, ramp, flat=10.0, g=0.04, record=False, qc=False):
     qc_log = dict(min_gap=1e9, max_out=-1e9, wall_adds=[], dead_counts=[], steps=0,
                   v_frames=[], violations=0)
     next_sample = 0.0
-    v_pause_start = None
+    used = np.zeros(n, dtype=bool)    # sursis déjà utilisé
+    in_s = np.zeros(n, dtype=bool)    # en sursis maintenant
+    sdist = np.zeros(n)
+    saves = []
+    sursis_log = []
 
     while True:
         v = V0 * math.exp(lnv)
@@ -109,7 +116,7 @@ def run(seed, n, ramp, flat=10.0, g=0.04, record=False, qc=False):
         # --- snapshot image
         if record and t >= next_frame - 1e-9:
             cnt = th.count(n)
-            frames.append(dict(t=t, pos=pos.copy(), alive=alive.copy(), v=v_eff,
+            frames.append(dict(t=t, pos=pos.copy(), alive=alive.copy(), v=v_eff, sur=in_s.copy(),
                                ang=th.ang.copy(), own=th.own.copy(), cnt=cnt,
                                sub=[np.array(s) if s else np.zeros((0, 2)) for s in sub]))
             sub = [[] for _ in range(n)]
@@ -161,6 +168,10 @@ def run(seed, n, ramp, flat=10.0, g=0.04, record=False, qc=False):
                     if qc:
                         qc_log['wall_adds'].append(int((th.own == b).sum()) - before)
                     events.append((t + dt, 'wall', nx * R, ny * R, int(b)))
+                    if in_s[b]:
+                        in_s[b] = False
+                        saves.append((t + dt, int(b)))
+                        events.append((t + dt, 'saved', pos[b, 0], pos[b, 1], int(b)))
         # --- chocs entre balles (élastique, puis même vitesse pour toutes)
         for ii in range(len(idx)):
             for jj in range(ii + 1, len(idx)):
@@ -192,6 +203,7 @@ def run(seed, n, ramp, flat=10.0, g=0.04, record=False, qc=False):
             if r > R - BR:
                 pos[b] *= (R - BR) / r
         t += dt
+        sdist[in_s] += v_eff * dt
         if record:
             for b in idx:
                 sub[b].append(pos[b].copy())
@@ -222,8 +234,23 @@ def run(seed, n, ramp, flat=10.0, g=0.04, record=False, qc=False):
         # --- morts
         if t_win is None:
             cnt = th.count(n)
+            dying = []
             for b in idx:
-                if cnt[b] == 0:
+                if in_s[b]:
+                    if sdist[b] >= sursis:
+                        in_s[b] = False
+                        dying.append(b)
+                elif cnt[b] == 0:
+                    if not used[b]:
+                        used[b] = True
+                        in_s[b] = True
+                        sdist[b] = 0.0
+                        sursis_log.append((t, int(b)))
+                        events.append((t, 'sursis', pos[b, 0], pos[b, 1], int(b)))
+                    else:
+                        dying.append(b)
+            for b in dying:
+                if True:
                     alive[b] = False
                     elim.append((t, int(b)))
                     if qc:
@@ -247,7 +274,8 @@ def run(seed, n, ramp, flat=10.0, g=0.04, record=False, qc=False):
             lnv += rate * dt
 
     v_end = V0 * math.exp(lnv)
-    res = dict(seed=seed, n=n, ramp=ramp, flat=flat, g=g, elim=elim, t2=t2, t_win=t_win,
+    res = dict(seed=seed, n=n, ramp=ramp, flat=flat, g=g, sursis=sursis, saves=saves,
+               sursis_log=sursis_log, elim=elim, t2=t2, t_win=t_win,
                winner=winner, duration=t_win + PAUSE, v_end=v_end, mult=v_end / V0,
                leader=leader_samples, events=events)
     if record:
@@ -262,5 +290,5 @@ if __name__ == '__main__':
     import sys, time
     s = int(sys.argv[1]) if len(sys.argv) > 1 else 1
     t0 = time.time()
-    r = run(s, 5, 0.45)
+    r = run(s, 4, 0.22)
     print(time.time() - t0, None if r is None else {k: r[k] for k in ('elim', 't2', 't_win', 'mult', 'duration')})

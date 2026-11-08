@@ -1,6 +1,10 @@
-"""COLOR RUSH — son (aucune musique, aucun son de fil, aucun son lié à la vitesse).
+"""COLOR RUSH — son (aucune musique, aucun son lié à la vitesse).
 
-python3 audio.py EVENTS.json OUT.wav
+python3 audio.py EVENTS.json OUT.wav C|B
+- fil qui casse (son principal) : UN SEUL son pour toute la vidéo, C (aigu, sec, 7 vidéos sur 10) ou B (THWACK, 3 sur 10),
+  repris de engines/string_circle/audio.py ; claquement à l'instant exact de la cassure, rafale décalée de 11 ms
+  quand plusieurs fils cassent dans la même image (ignoré si > 0,15 s de retard), hauteur ×0,85..1,2, panoramique varié
+- balle sauvée pendant son sursis : petit pop montant discret
 - mur / choc entre balles : crunch-pop (bruit filtré + note 820 -> 120 Hz, 0,3 s), max 1 / 60 ms
 - élimination : pop grave (300 -> 60 Hz, 0,5 s) + petit bruit court
 - victoire : accord brillant de 4 notes montantes
@@ -36,6 +40,34 @@ def filt_noise(dur, lo, hi, decay):
     return y * np.exp(-t / decay)
 
 
+def snap_C(f):
+    # C : aigu et sec, petit "tic" de fil fin qui casse (string_circle, validé)
+    n = int(0.09 * SR); t = np.arange(n) / SR
+    nz = rng.standard_normal(n)
+    crack = np.diff(np.diff(nz, prepend=0), prepend=0) * np.exp(-t / 0.0015)
+    fi = 700 * f + 1300 * f * np.exp(-t / 0.008)
+    ph = 2 * np.pi * np.cumsum(fi) / SR
+    body = np.sin(ph) * np.exp(-t / 0.02) * (1 - np.exp(-t / 0.0003))
+    return 0.25 * crack + 0.6 * body
+
+
+def snap_B(f):
+    # B : grave et épais, gros élastique qui claque "THWACK" (string_circle, validé)
+    n = int(0.22 * SR); t = np.arange(n) / SR
+    nz = rng.standard_normal(n)
+    crack = np.diff(nz, prepend=0) * np.exp(-t / 0.003)
+    fi = 120 * f + 380 * f * np.exp(-t / 0.018)
+    ph = 2 * np.pi * np.cumsum(fi) / SR
+    body = (np.sin(ph) + 0.5 * np.sin(2 * ph) + 0.25 * np.sin(3 * ph)) * np.exp(-t / 0.06) * (1 - np.exp(-t / 0.0006))
+    thwap = np.convolve(nz, np.ones(14) / 14, 'same') * np.exp(-t / 0.012)
+    return 0.18 * crack + 0.7 * body + 0.5 * thwap
+
+
+def saved_pop():
+    s = sweep(500, 1100, 0.12, 0.04)
+    return s * 0.6
+
+
 def crunch():
     s = 0.75 * sweep(820, 120, 0.3, 0.07)
     nz = filt_noise(0.3, 900, 5000, 0.012) * 0.45
@@ -60,18 +92,42 @@ def chord():
     return total
 
 
-def add(buf, snd, t, gain):
+def add(buf, snd, t, gain, pan=0.5):
     i = int(round(t * SR))
     j = min(len(buf), i + len(snd))
     if i < len(buf):
-        buf[i:j] += snd[:j - i] * gain
+        s = snd[:j - i] * gain
+        buf[i:j, 0] += s * np.sqrt(2 * (1 - pan))
+        buf[i:j, 1] += s * np.sqrt(2 * pan)
 
 
 if __name__ == '__main__':
     ev = json.load(open(sys.argv[1]))
     out = sys.argv[2]
+    SNAP = sys.argv[3].upper()
+    assert SNAP in ('C', 'B')
+    snap = snap_C if SNAP == 'C' else snap_B
     dur = ev['duration']
-    buf = np.zeros(int(dur * SR) + SR)
+    buf = np.zeros((int(dur * SR) + SR, 2))
+    # fils qui cassent : rafales par image, 11 ms d'écart, ignorés si > 0,15 s de retard
+    prng = np.random.default_rng(11)
+    byframe = {}
+    for (tb, o, ang) in ev['breaks']:
+        byframe.setdefault(int(np.ceil(tb * 60 - 1e-6)), []).append(tb)
+    nsnap = skipped = 0
+    last_end = -1.0
+    for fi in sorted(byframe):
+        for k, tb in enumerate(sorted(byframe[fi])):
+            ts = max(tb + k * 0.011, last_end + 0.011 if k else tb)
+            if ts - tb > 0.15:
+                skipped += 1
+                continue
+            add(buf, snap(prng.uniform(0.85, 1.2)), ts, 0.55 if SNAP == 'C' else 0.5,
+                pan=prng.uniform(0.25, 0.75))
+            last_end = ts
+            nsnap += 1
+    print('son de fil', SNAP, 'claquements', nsnap, 'ignorés', skipped)
+    SP = saved_pop()
     C, Pp, Ch = crunch(), pop(), chord()
     last = -1.0
     placed = []
@@ -85,6 +141,9 @@ if __name__ == '__main__':
         elif kind == 'death':
             add(buf, Pp, t, 0.9)
             placed.append((t, kind))
+        elif kind == 'saved':
+            add(buf, SP, t, 0.35)
+            placed.append((t, kind))
         elif kind == 'win':
             add(buf, Ch, t, 0.6)
             placed.append((t, kind))
@@ -92,7 +151,7 @@ if __name__ == '__main__':
     peak = np.abs(buf).max()
     buf *= 10 ** (-1 / 20) / peak
     pcm = (np.clip(buf, -1, 1) * 32767).astype(np.int16)
-    st = np.stack([pcm, pcm], axis=1)
+    st = pcm
     with wave.open(out, 'wb') as w:
         w.setnchannels(2)
         w.setsampwidth(2)

@@ -1,0 +1,7 @@
+{"seed": 1000, "n": 4, "ramp": 0.22, "sursis": 300.0, "g": 0.01, "flat": 0.0,
+ "teams": [
+  {"rgb": [110, 185, 255], "flag": "Argentina"},
+  {"rgb": [240, 240, 240], "flag": "England"},
+  {"rgb": [40, 90, 255], "flag": "France"},
+  {"rgb": [255, 200, 0], "flag": "Spain"}
+ ]}
