@@ -1,0 +1,7 @@
+*.mp4
+*.wav
+*.npy
+*.png
+s_*.txt
+screamer_t.txt
+__pycache__/
