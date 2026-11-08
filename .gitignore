@@ -1,2 +1,8 @@
 __pycache__/
 *.pyc
+engines/string_circle_rush/video_noaudio.mp4
+engines/string_circle_rush/audio.wav
+engines/string_circle_rush/*.npy
+engines/string_circle_rush/kf/
+engines/string_circle_rush/render.log
+__pycache__/

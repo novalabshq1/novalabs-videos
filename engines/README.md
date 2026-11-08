@@ -24,3 +24,15 @@ cd engines/spike_escape
 2. python3 render_esc.py SEED esc_noaudio.mp4   (couleurs de l'anneau : C1/CM/C2 ; titre : TITLE)
 3. python3 audio_esc.py $(ffprobe -v error -show_entries format=duration -of csv=p=0 esc_noaudio.mp4)
 4. ffmpeg -y -i esc_noaudio.mp4 -i esc_audio.wav -c:v copy -c:a aac -b:a 192k -shortest final.mp4
+
+## string_circle_rush (vidéo de MIDI : couleurs ou pays)
+Copie exacte de string_circle avec 4 changements seulement : aucun texte, +10 fils par contact au bord (~1° d'écart),
+vitesse continue v = 200·e^(∫taux) avec taux = 0,008 + 0,25·lissage((t−t2)/6) (t2 = 2 balles restantes), pas dt = min(1/120 s, 3 px/v),
+traînée fine des sous-pas quand ça va vite ; audio : claquement ignoré si > 0,15 s après la cassure, crunch-pop ≤ 1 / 60 ms.
+cd engines/string_circle_rush
+1. render_spec.py : noms "solid-xxx" = balle de couleur pleine ; sinon nom de pays (drapeau dans flag() de render.py).
+2. python3 search.py 0 1500 4   (VALID = 50-60 s, 1re élimination ≥ 10 s, ≥ 6 s entre 1re et 2e, duel 10-20 s, ≥ 3 changements de leader, pas de balles collées)
+3. python3 qc_logs.py SEED
+4. python3 render.py SEED video_noaudio.mp4 200 0.8 18 0.15   (intermédiaire sans perte)
+5. python3 audio.py DUREE C|B ; puis ffmpeg avec les réglages d'export TikTok (voir concepts/2026-11-08-midi-couleurs-rush.sh)
+6. python3 qc_frame.py kf/*.png  (cadrage des images clés)
