@@ -5,3 +5,5 @@
 s_*.txt
 screamer_t.txt
 __pycache__/
+*.err
+qc/
