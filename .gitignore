@@ -1,2 +1,5 @@
 __pycache__/
 *.pyc
+engines/morning_press/core.so
+engines/morning_press/*.mkv
+engines/morning_press/*.wav
