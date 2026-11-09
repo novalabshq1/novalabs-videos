@@ -24,3 +24,9 @@ cd engines/spike_escape
 2. python3 render_esc.py SEED esc_noaudio.mp4   (couleurs de l'anneau : C1/CM/C2 ; titre : TITLE)
 3. python3 audio_esc.py $(ffprobe -v error -show_entries format=duration -of csv=p=0 esc_noaudio.mp4)
 4. ffmpeg -y -i esc_noaudio.mp4 -i esc_audio.wav -c:v copy -c:a aac -b:a 192k -shortest final.mp4
+
+## escape_spike (vidéo du soir ESCAPE — règle SPIKE ESCAPE + screamer)
+Copie de spike_escape : ouverture pile en bas (90°), lancer fixe −80° ±8° depuis (CX, CY−60), screamer procédural (face.py).
+cd engines/escape_spike
+1. python3 search.py 0 600 GAP_DEG   -> graines valides (30-45 s, ≥9 essais, faux espoirs)
+2. python3 render_escape.py SEED GAP_DEG final.mp4   (sim + son + screamer + export qualité TikTok en une passe ; logs dans run_log.json)
