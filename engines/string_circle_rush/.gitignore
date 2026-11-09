@@ -1,0 +1,7 @@
+*.npy
+*.pkl
+*.wav
+*.log
+video_noaudio.mp4
+final.mp4
+__pycache__/
