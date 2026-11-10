@@ -1,0 +1,8 @@
+# Journal — vidéos du soir ESCAPE
+
+| Date | Vidéo | Ouverture | Essais | Screamer | Couleurs | Durée | Liens |
+|---|---|---|---|---|---|---|---|
+| 2026-11-09 | ESCAPE — SPIKE ESCAPE (« CAN ONE ESCAPE? », graine 97, moteur engines/escape_spike) | 19° | 10 (la 10e sort après 9,0 s de vol) | 23,78 s (60 %), 0,6 s, visage v1 (inclinaison −5°, sourire 1,35) | anneau turquoise → bleu → magenta ; balles palette vive 16 couleurs | 39,9 s | Zernio TikTok post 6af252ad1ec14ce1f6d1d43c (publié), YouTube post 6af252bcc746a198a5e88bec (publié), Instagram : NON publié (aucun compte Instagram connecté sur Zernio) ; fichier videos/2026-11-09-escape-spike.mp4 |
+| 2026-11-10 | ESCAPE — GROW (« EACH BOUNCE MAKES IT BIGGER », graine 545, ×1,35 par rebond, éclate si diamètre > ouverture ; moteur engines/escape_grow) | 20° (pile en bas) | 10 (6 mortes sur un pic, 3 éclatées à r = 86 px, la 10e sort avec r ≈ 47 px après 2,9 s de vol ; faux espoirs 60 et 61 px avant 15 s) | 21,97 s (60 %), 0,6 s, visage variante (inclinaison +6°, sourire 1,5, regard décalé à droite) | anneau or → orange → framboise ; balles palette vive 10 couleurs | 36,9 s | TikTok post Zernio 6af3a5b8b277de62b81a773f (publié) · YouTube post Zernio 6af3a5c1bc7f15ef3ad49123 (publié) · Instagram : ÉCHEC ×2 (aucun compte Instagram connecté dans Zernio) · videos/2026-11-10-escape-grow.mp4 |
+
+Note 2026-11-10 : SHRINK essayé d'abord puis abandonné (les grosses balles grises forment des cuvettes où les petites balles rebondissent sans fin : ~95 % de graines bloquées). GROW se débloque tout seul (une balle coincée grossit jusqu'à éclater).

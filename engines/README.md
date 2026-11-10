@@ -24,3 +24,8 @@ cd engines/spike_escape
 2. python3 render_esc.py SEED esc_noaudio.mp4   (couleurs de l'anneau : C1/CM/C2 ; titre : TITLE)
 3. python3 audio_esc.py $(ffprobe -v error -show_entries format=duration -of csv=p=0 esc_noaudio.mp4)
 4. ffmpeg -y -i esc_noaudio.mp4 -i esc_audio.wav -c:v copy -c:a aac -b:a 192k -shortest final.mp4
+
+## escape_grow (format du soir ESCAPE, règle GROW + screamer)
+cd engines/escape_grow  (python3 avec numpy + opencv-python-headless)
+1. python3 search.py 0 600 20 26 1.35  -> graines valides (≥ 9 essais, 30-45 s, faux espoirs, ≥ 1 éclatement)
+2. python3 render_escape.py SEED 20 OUT.mp4 1.35  -> sim + son + screamer + export qualité TikTok en une passe (run_log.json pour le contrôle)
