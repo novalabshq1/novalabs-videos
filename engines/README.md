@@ -24,3 +24,10 @@ cd engines/spike_escape
 2. python3 render_esc.py SEED esc_noaudio.mp4   (couleurs de l'anneau : C1/CM/C2 ; titre : TITLE)
 3. python3 audio_esc.py $(ffprobe -v error -show_entries format=duration -of csv=p=0 esc_noaudio.mp4)
 4. ffmpeg -y -i esc_noaudio.mp4 -i esc_audio.wav -c:v copy -c:a aac -b:a 192k -shortest final.mp4
+
+## escape_clones (format du soir ESCAPE, règle CLONES + screamer)
+cd engines/escape_clones  (python3 avec numpy + opencv-python-headless, police Poppins Bold)
+1. python3 search.py 0 600 14 1.2  -> graines valides (30-45 s, faux espoirs, aucune balle > 8 s sauf la gagnante) ; 14 = ouverture (°), 1,2 = délai mini entre deux apparitions (s)
+2. python3 face.py SEED TILT SMILE GAZE face_tonight.png  -> visage du screamer (change les paramètres chaque soir)
+3. python3 render_clones.py SEED x.mp4 none T none 14 1.2 --events-only ; python3 audio_esc.py DUR T -1.5 ; python3 render_clones.py SEED final.mp4 esc_audio.wav T face_tonight.png 14 1.2
+   (T = seconde du screamer ; export qualité TikTok en une passe ; calib.sh vérifie le pic du cri après AAC)
