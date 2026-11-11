@@ -24,7 +24,16 @@ def twist_params(twist, seed):
         # fente à un endroit au hasard (hors bas de l'écran), à peine plus large qu'une balle de 15 px
         import random
         rng = random.Random(seed * 7919)
-        return dict(slit_ang=rng.uniform(-math.pi, math.pi), slit_w=34.0)
+        axis = 1 if MECH == 'press_side' else 0
+        while True:
+            a = rng.uniform(-math.pi, math.pi)
+            # pas dans la bande droite de 140 px (x > 940) et loin des tiges du mécanisme (>= 20°)
+            if 540 + 450 * math.cos(a) > 900:
+                continue
+            rod = [0.0, math.pi] if axis == 1 else [math.pi / 2, -math.pi / 2]
+            if min(abs(math.remainder(a - r, 2 * math.pi)) for r in rod) < math.radians(20):
+                continue
+            return dict(slit_ang=a, slit_w=34.0)
     return {}
 
 

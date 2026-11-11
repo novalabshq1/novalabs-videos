@@ -41,4 +41,5 @@ cd engines/morning_press
 4. python3 qc.py final.mp4 SEED MECH ['{extra}']                      -> doit afficher "QC OK"
 Ajouter un mécanisme : géométrie/contraintes dans sim.c (mech_constrain, in_zone, point_ok, crush), entrée dans MECHS
 (sim.py) et dessin dans render.py. Ne jamais repartir de zéro.
-Mécanismes faits : press (2026-11-10). press_side = même code, axe horizontal (prêt, non encore publié).
+Mécanismes faits : press (2026-11-09, 2026-11-10), press_side (2026-11-11, avec LA TRICHEUSE).
+LA TRICHEUSE : la fente est tirée au hasard par graine mais jamais dans la bande droite (x > 900) ni à moins de 20° des tiges du mécanisme ; ~1 graine valide sur 90.
