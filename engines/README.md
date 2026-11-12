@@ -34,12 +34,16 @@ des balles >= 50 % du cercle (la presse reste fermée) + 2,5 s.
 Fichiers : sim.c (coeur physique C, compilé automatiquement), sim.py (wrapper, MECHS = mécanismes disponibles),
 search.py (recherche parallèle), render.py (rendu + export TikTok), audio.py (bruitages / mélodie), qc.py (contrôle), diag.py.
 cd engines/morning_press
-1. python3 search.py MECH TWIST 0 1500 out.jsonl     MECH : press | press_side ; TWIST : survivor | tricheuse | lastcolor | any
+1. python3 search.py MECH TWIST 0 1500 out.jsonl     MECH : press | press_side | jaws ; TWIST : survivor | tricheuse | lastcolor | rescapee | any
    (lignes "OK" = parties valides : plein entre 42 et 57 s, aucun coup dans le vide, chevauchement <= 2,5 px, élément arrivé)
 2. python3 audio.py SEED MECH audio.wav ['{"slit_ang":..,"slit_w":34}'] [--melody "E5,D5,C5,..."]
 3. python3 render.py SEED MECH audio.wav final.mp4 ['{extra}']        (images clés : --frames 0,60,... --png-dir DIR)
 4. python3 qc.py final.mp4 SEED MECH ['{extra}']                      -> doit afficher "QC OK"
 Ajouter un mécanisme : géométrie/contraintes dans sim.c (mech_constrain, in_zone, point_ok, crush), entrée dans MECHS
 (sim.py) et dessin dans render.py. Ne jamais repartir de zéro.
-Mécanismes faits : press (2026-11-09, 2026-11-10), press_side (2026-11-11, avec LA TRICHEUSE).
+Mécanismes faits : press (2026-11-09, 2026-11-10), press_side (2026-11-11, avec LA TRICHEUSE), jaws (2026-11-12, MÂCHOIRES : 2 demi-disques haut/bas, avec LA RESCAPÉE).
+LA RESCAPÉE (TWIST rescapee, réglages {"rescue": 3.0, "rescue_v": 250.0, "rescue_nmax": 6}) : règle physique uniforme dans sim.c — une balle prise
+  qui touche déjà le bord de la zone et reçoit un choc franc (> 250 px/s) d'une autre balle prise, dans une bouchée peu remplie (<= 6 balles),
+  est chassée vers l'extérieur ; elle doit sortir seule avant que les faces se ferment, sinon elle est écrasée quand même. ~2 graines valides / 1300.
+LA DERNIÈRE COULEUR (lastcolor) : testée le 2026-11-12, quasi impossible avec ce moteur (il reste toujours 20 à 36 balles non cyan quand le cercle est plein).
 LA TRICHEUSE : la fente est tirée au hasard par graine mais jamais dans la bande droite (x > 900) ni à moins de 20° des tiges du mécanisme ; ~1 graine valide sur 90.

@@ -81,6 +81,10 @@ def main():
     ok &= colok
     print('max overlap %.2f px, max wall penetration %.2f px, escapes %d' % (r['max_overlap'], r['max_wall_pen'], r['escapes']))
     ok &= r['max_overlap'] <= 2.5 and r['max_wall_pen'] <= 0.5
+    if extra.get('rescue', 0) > 0:
+        print('LA RESCAPÉE : kicks %d, rescues %d, fails %d, first rescue at %.2f s (colour %d)' % (
+            r['rescue_kicks'], r['rescues'], r['rescue_fail'], r['rescue_t'], r['rescue_col']))
+        ok &= r['rescues'] >= 1
     print('t_full %.2f, green capture times %s, final colours %s' % (r['t_full'], r['green_cap'], r['col_count']))
     # audio
     pk = subprocess.run(['ffmpeg', '-i', path, '-af', 'volumedetect', '-vn', '-f', 'null', '-'],

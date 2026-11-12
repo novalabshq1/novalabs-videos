@@ -2,7 +2,7 @@
 
 python3 search.py MECH TWIST SEED0 SEED1 [out.jsonl]
   MECH  : clé de sim.MECHS (press, press_side, ...)
-  TWIST : survivor | tricheuse | lastcolor | any
+  TWIST : survivor | tricheuse | lastcolor | rescapee | any
 Critères communs : cercle plein entre 42 et 57 s, aucun coup dans le vide, aucune division ratée,
 premier coup avant 3 s, montée progressive.
 """
@@ -20,6 +20,8 @@ EXTRA = {}
 
 
 def twist_params(twist, seed):
+    if twist == 'rescapee':
+        return dict(rescue=3.0, rescue_v=250.0, rescue_nmax=6)
     if twist == 'tricheuse':
         # fente à un endroit au hasard (hors bas de l'écran), à peine plus large qu'une balle de 15 px
         import random
@@ -51,7 +53,10 @@ def job(seed):
         tw = r['escapes'] == 1 and 15 < r['escape_t'] < r['t_full'] - 3
     elif TWIST == 'lastcolor':
         cc = r['col_count']
-        tw = r['t_full'] > 0 and sum(cc[:7]) == 1
+        tw = r['t_full'] > 0 and sum(cc[:7]) == 1 and r['t_full'] - r['t_multi'] >= 4.0
+    elif TWIST == 'rescapee':
+        # une seule balle chassée des mâchoires (et elle s'en sort), bien visible : entre 8 s et 5 s avant la fin
+        tw = r['rescue_kicks'] == 1 and r['rescues'] == 1 and r['rescue_fail'] == 0 and 8 < r['rescue_t'] < r['t_full'] - 5
     else:
         tw = True
     r.pop('params')

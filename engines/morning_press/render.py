@@ -95,6 +95,64 @@ def draw_press(ctx, m, f):
     cr.restore(ctx)
 
 
+def draw_jaws(ctx, m, f):
+    """MÂCHOIRES : 2 demi-disques (faces plates face à face), une tige chacun jusqu'au bord du cercle."""
+    axis, W, rw = m['axis'], m['W'], m['rod_w']
+    Rj = W / 2
+    cr.save(ctx)
+    cr.new_path(ctx)
+    cr.arc(ctx, CX, CY, R - 2.5, 0, 2 * math.pi)
+    cr.clip(ctx)
+    cr.new_path(ctx)
+    for s in (-1, 1):
+        # tige
+        a_in, a_out = f + Rj - 6, R + 20
+        rect_ab(ctx, axis, *(sorted((s * a_in, s * a_out))), -rw / 2, rw / 2)
+        fill_stroke(ctx, hexrgb(ROD))
+        # demi-disque : centre sur la face (a = s*f), bombé vers l'extérieur
+        cx, cy = pt_ab(axis, s * f, 0)
+        if axis == 0:
+            a0 = math.pi if s < 0 else 0.0   # s = -1 : moitié haute (y < cy)
+        else:
+            a0 = math.pi / 2 if s < 0 else -math.pi / 2
+        cr.new_path(ctx)
+        cr.arc(ctx, cx, cy, Rj, a0, a0 + math.pi)
+        cr.close_path(ctx)
+        fill_stroke(ctx, hexrgb(BLOCK))
+        # bande de frappe le long de la face plate (dans le demi-disque)
+        cr.save(ctx)
+        cr.new_path(ctx)
+        cr.arc(ctx, cx, cy, Rj - 1.5, a0, a0 + math.pi)
+        cr.close_path(ctx)
+        cr.clip(ctx)
+        cr.new_path(ctx)
+        pa0, pa1 = sorted((s * f, s * (f + 18)))
+        rect_ab(ctx, axis, pa0, pa1, -Rj, Rj)
+        fill_stroke(ctx, hexrgb(PLATE), 3.0)
+        cr.restore(ctx)
+        # contour net par-dessus
+        cr.new_path(ctx)
+        cr.arc(ctx, cx, cy, Rj, a0, a0 + math.pi)
+        cr.close_path(ctx)
+        cr.set_rgb(ctx, *OUTLINE)
+        cr.set_line_width(ctx, 3.0)
+        cr.stroke(ctx)
+        # rivets : un arc de rivets dans le dôme + le moyeu
+        cr.set_rgb(ctx, *hexrgb(RIVET))
+        for k in range(5):
+            th = math.radians(30 + 30 * k)          # 30..150° dans le dôme
+            u, v = (Rj - 26) * math.sin(th), (Rj - 26) * math.cos(th)
+            x, y = pt_ab(axis, s * (f + u), v)
+            cr.new_path(ctx)
+            cr.arc(ctx, x, y, 5.0, 0, 2 * math.pi)
+            cr.fill(ctx)
+        x, y = pt_ab(axis, s * (f + 62), 0)
+        cr.new_path(ctx)
+        cr.arc(ctx, x, y, 9.0, 0, 2 * math.pi)
+        cr.fill(ctx)
+    cr.restore(ctx)
+
+
 def draw_frame(ctx, frame, m, slit=None):
     t, f, ph, arr = frame
     cr.set_rgb(ctx, 0, 0, 0)
@@ -107,7 +165,7 @@ def draw_frame(ctx, frame, m, slit=None):
         cr.new_path(ctx)
         cr.arc(ctx, float(x), float(y), float(r), 0, 2 * math.pi)
         cr.fill(ctx)
-    draw_press(ctx, m, f)
+    (draw_jaws if m.get('mech') == 1 else draw_press)(ctx, m, f)
     # cercle : contour blanc 5 px, rayon 450 (diamètre 900)
     cr.set_rgb(ctx, *OUTLINE)
     cr.set_line_width(ctx, 5.0)

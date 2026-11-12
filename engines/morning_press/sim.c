@@ -13,7 +13,7 @@
 
 typedef struct {
   double R, cx, cy, speed, dt;
-  int mech;          // 0 = PRESS (2 blocks closing on the centre)
+  int mech;          // 0 = PRESS (2 blocks closing on the centre), 1 = JAWS (2 half-discs, flat faces)
   int axis;          // 0 = blocks move vertically (top/bottom), 1 = horizontally (left/right)
   double W, H, g_open, rod_w;
   double t_close, t_hold, t_open, t_pause;
@@ -24,6 +24,13 @@ typedef struct {
   int npos_iter;      // positional solver iterations per step
   // twist: wall slit (LA TRICHEUSE). slit_w <= 0 disables it.
   double slit_ang, slit_w;
+  // LA RESCAPÉE (rescue > 0): the side retention of a captured ball holds, EXCEPT when another captured ball
+  // strikes it while it already touches the side line (|b| >= W/2 - r - rescue px) and the blow sends it outward:
+  // it is knocked out of the jaws and has to get out on its own (faces keep closing; if it is still between
+  // them when they shut, it is crushed after all). Uniform rule for every ball, nothing is forced.
+  double rescue;
+  double rescue_v;   // minimum closing speed of the blow (px/s)
+  int rescue_nmax;   // only in a loosely filled bite (at most this many balls caught): a packed bite holds
 } Params;
 
 typedef struct {
@@ -43,9 +50,16 @@ typedef struct {
   double escape_t;      // time of first escape
   int escape_col;
   double fill_at_end;
+  double t_multi;       // last time more than one non-cyan ball was alive (LA DERNIÈRE COULEUR)
+  int lone_col;         // colour of the lone non-cyan ball at the end (-1 = none)
+  int lone_id;
+  int rescues;          // captured balls knocked out of the mechanism by another ball
+  double rescue_t, rescue_f;
+  int rescue_col, rescue_id, rescue_hit_crushed;
+  int rescue_kicks, rescue_fail;
 } Result;
 
-typedef struct { double x, y, vx, vy, r, rt; int col, id, cap, alive, gone; double capa; } Ball;
+typedef struct { double x, y, vx, vy, r, rt; int col, id, cap, alive, gone; double capa; int kick, esc; } Ball;
 
 static Ball B[MAXB];
 static int NB, nextid;
@@ -97,7 +111,7 @@ static int add_ball(double x, double y, double vx, double vy, double r, int col)
   if (NB >= MAXB) return -1;
   Ball *q = &B[NB];
   q->x = x; q->y = y; q->vx = vx; q->vy = vy; q->r = r; q->rt = r; q->col = col;
-  q->id = nextid++; q->cap = 0; q->alive = 1; q->gone = 0; q->capa = 0;
+  q->id = nextid++; q->cap = 0; q->alive = 1; q->gone = 0; q->capa = 0; q->kick = 0; q->esc = 0;
   norm_speed(q);
   return NB++;
 }
@@ -172,6 +186,56 @@ static void circle_constrain(Ball *q, int first) {
   }
 }
 
+
+// generic push of a ball out of a convex solid, given (in local frame) the closest point and inside flag.
+static void push_out(Ball *q, double a, double b, double na, double nb, double pen, double vbox, double limit) {
+  if (limit > 0 && pen > limit) pen = limit;
+  a += na * pen; b += nb * pen;
+  from_ab(a, b, &q->x, &q->y);
+  double va, vb; vel_to_ab(q->vx, q->vy, &va, &vb);
+  double rva = va - vbox, rvb = vb;
+  double vn = rva * na + rvb * nb;
+  if (vn < 0) {
+    rva -= 2 * vn * na; rvb -= 2 * vn * nb;
+    vel_from_ab(rva + vbox, rvb, &q->vx, &q->vy);
+  }
+}
+
+// JAWS: half-disc of radius Rj, flat face at a = c, bulging towards side s (+1 / -1), moving with vbox along a.
+static int halfdisc_push(Ball *q, double c, int s, double Rj, double vbox, double limit) {
+  double a, b; to_ab(q->x, q->y, &a, &b);
+  double u = s * (a - c), v = b;
+  double d = hypot(u, v);
+  double nu, nv, pen;
+  if (u >= 0 && d <= Rj) {  // centre inside the jaw
+    double pf = u + q->r, pa = Rj - d + q->r;
+    if (pf <= pa || d < 1e-9) { nu = -1; nv = 0; pen = pf; }
+    else { nu = u / d; nv = v / d; pen = pa; }
+  } else {
+    double cu, cv;
+    if (u < 0) { cu = 0; cv = v < -Rj ? -Rj : (v > Rj ? Rj : v); }
+    else { cu = u * Rj / d; cv = v * Rj / d; }
+    double du = u - cu, dv = v - cv, dd = hypot(du, dv);
+    if (dd >= q->r) return 0;
+    if (dd < 1e-9) { nu = -1; nv = 0; } else { nu = du / dd; nv = dv / dd; }
+    pen = q->r - dd;
+  }
+  push_out(q, a, b, s * nu, nv, pen, vbox, limit);
+  return 1;
+}
+
+// JAWS sealed while closing: capsule around the segment a in [-h, h] (b = 0), radius Rj.
+static int capsule_push(Ball *q, double h, double Rj, double limit) {
+  double a, b; to_ab(q->x, q->y, &a, &b);
+  double ca = a < -h ? -h : (a > h ? h : a);
+  double da = a - ca, db = b, d = hypot(da, db);
+  if (d >= Rj + q->r) return 0;
+  double na, nb;
+  if (d < 1e-9) { na = 0; nb = 1; } else { na = da / d; nb = db / d; }
+  push_out(q, a, b, na, nb, Rj + q->r - d, 0, limit);
+  return 1;
+}
+
 static int in_zone(Ball *q) {
   double a, b; to_ab(q->x, q->y, &a, &b);
   return fabs(b) < P.W * 0.5 && fabs(a) < f;
@@ -198,7 +262,13 @@ static void mech_constrain(Ball *q) {
   }
   // free ball vs mechanism solids
   double rodlen = P.R + 40;
-  if (phase == 1 || phase == 2 || (phase == 4 && f < 1)) {
+  if (q->esc) {  // knocked-out ball still between the faces: only the faces themselves stop it
+    if (P.mech == 1) { halfdisc_push(q, f, 1, hw, fv, 0); halfdisc_push(q, -f, -1, hw, -fv, 0); }
+    else { box_push(q, f, f + P.H, -hw, hw, fv, 0); box_push(q, -(f + P.H), -f, -hw, hw, -fv, 0); }
+  } else if (P.mech == 1) {
+    if (phase == 1 || phase == 2 || (phase == 4 && f < 1)) capsule_push(q, f, hw, lim);
+    else { halfdisc_push(q, f, 1, hw, fv, 0); halfdisc_push(q, -f, -1, hw, -fv, 0); }
+  } else if (phase == 1 || phase == 2 || (phase == 4 && f < 1)) {
     // sealed column (both blocks + the zone between them)
     box_push(q, -(f + P.H), f + P.H, -hw, hw, 0, lim);
   } else {
@@ -303,7 +373,7 @@ static double solve_pairs(int first, int measure) {
       for (int j = head[cy * NG + cx]; j >= 0; j = nxt[j]) {
         if (j <= i) continue;
         Ball *q = &B[j];
-        if (p->cap != q->cap) continue;
+        if (p->cap != q->cap && !p->esc && !q->esc) continue;
         if (measure && p->cap) continue;
         double dx = q->x - p->x, dy = q->y - p->y, rr = p->r + q->r;
         double d2 = dx * dx + dy * dy;
@@ -317,6 +387,7 @@ static double solve_pairs(int first, int measure) {
         if (first) {
           double vrel = (q->vx - p->vx) * nx + (q->vy - p->vy) * ny;
           if (vrel < 0) {
+            if (p->cap && q->cap && vrel < -P.rescue_v) { p->kick = 1; q->kick = 1; }
             double jimp = 2 * vrel / (1 / m1 + 1 / m2);
             p->vx += jimp / m1 * nx; p->vy += jimp / m1 * ny;
             q->vx -= jimp / m2 * nx; q->vy -= jimp / m2 * ny;
@@ -349,7 +420,8 @@ int run(Params *pp, unsigned long long seed, Result *res, const char *rec_path, 
   P = *pp; RES = res;
   memset(res, 0, sizeof(Result));
   res->t_full = -1; res->green_cap[0] = res->green_cap[1] = -1; res->first_hit = -1;
-  res->escape_t = -1; res->escape_col = -1;
+  res->escape_t = -1; res->escape_col = -1; res->t_multi = 0; res->lone_col = -1; res->lone_id = -1;
+  res->rescue_t = -1; res->rescue_id = -1; res->rescue_col = -1;
   rs = seed * 0x9E3779B97F4A7C15ULL + 0x2545F4914F6CDD1DULL; if (!rs) rs = 1;
   for (int k = 0; k < 10; k++) rnd();
   fev = ev_path ? fopen(ev_path, "wb") : NULL;
@@ -397,6 +469,7 @@ int run(Params *pp, unsigned long long seed, Result *res, const char *rec_path, 
         res->hits++;
         if (res->first_hit < 0) res->first_hit = T;
         ev(1, 0, 0, 0, 0, crushed_this);
+        if (res->rescue_t >= 0 && res->rescue_hit_crushed == 0 && T - res->rescue_t < P.t_close + 1e-6) res->rescue_hit_crushed = crushed_this;
       }
     } else if (phase == 2) {
       f = 0;
@@ -418,7 +491,7 @@ int run(Params *pp, unsigned long long seed, Result *res, const char *rec_path, 
       for (int i = 0; i < NB; i++) if (B[i].alive && B[i].cap && f < B[i].r + 0.5) crush(i);
     }
     // ---- integrate ----
-    for (int i = 0; i < NB; i++) if (B[i].alive) { B[i].x += B[i].vx * P.dt; B[i].y += B[i].vy * P.dt; }
+    for (int i = 0; i < NB; i++) if (B[i].alive) { B[i].x += B[i].vx * P.dt; B[i].y += B[i].vy * P.dt; B[i].kick = 0; }
     // children grow to their full size in ~0.18 s (lets them squeeze into the crowd without overlap)
     for (int i = 0; i < NB; i++) if (B[i].alive && B[i].r < B[i].rt) {
       B[i].r += B[i].rt * 0.6 * P.dt / 0.18; if (B[i].r > B[i].rt) B[i].r = B[i].rt;
@@ -427,7 +500,33 @@ int run(Params *pp, unsigned long long seed, Result *res, const char *rec_path, 
     int nit = P.npos_iter + NB / 25; if (nit > 26) nit = 26;
     for (int it = 0; it < nit; it++) {
       solve_pairs(it == 0, 0);
+      if (P.rescue > 0 && phase == 1 && it == 0 && ncap_this <= P.rescue_nmax) {
+        for (int i = 0; i < NB; i++) {
+          Ball *q = &B[i];
+          if (!q->alive || !q->cap || !q->kick) continue;
+          double a, b; to_ab(q->x, q->y, &a, &b);
+          double va, vb; vel_to_ab(q->vx, q->vy, &va, &vb);
+          if (fabs(b) >= P.W * 0.5 - q->r - P.rescue && vb * b > 0) {
+            q->cap = 0; q->esc = 1;
+            RES->rescue_kicks++;
+            ev(7, q->x, q->y, q->col, q->id, f);
+          }
+        }
+      }
       for (int i = 0; i < NB; i++) if (B[i].alive) { mech_constrain(&B[i]); circle_constrain(&B[i], it == 0); }
+    }
+    // knocked-out balls: out once fully clear of the zone, crushed if the faces shut on them first
+    for (int i = 0; i < NB; i++) {
+      Ball *q = &B[i];
+      if (!q->alive || !q->esc) continue;
+      double a, b; to_ab(q->x, q->y, &a, &b);
+      if (fabs(b) >= P.W * 0.5 + q->r || fabs(a) >= f + q->r) {
+        q->esc = 0; RES->rescues++;
+        if (RES->rescue_t < 0) { RES->rescue_t = T; RES->rescue_f = f; RES->rescue_col = q->col; RES->rescue_id = q->id; }
+        ev(8, q->x, q->y, q->col, q->id, f);
+      } else if ((phase == 1 || phase == 2) && f < q->r + 0.5 && fabs(b) < P.W * 0.5) {
+        q->esc = 0; RES->rescue_fail++; crush(i);
+      }
     }
     // stacked captured balls squeezed against a face: crush them
     if (phase == 1) {
@@ -454,6 +553,11 @@ int run(Params *pp, unsigned long long seed, Result *res, const char *rec_path, 
       for (int i = 0; i < NB; i++) if (B[i].alive) B[j++] = B[i];
       NB = j;
     }
+    {
+      int nm = 0;
+      for (int i = 0; i < NB; i++) if (B[i].alive && !B[i].gone && B[i].col < NCOL - 1) nm++;
+      if (nm > 1 && res->t_full < 0) res->t_multi = T;
+    }
     // ---- fill ----
     if (res->t_full < 0 && fill_ratio() >= P.fill_target) {
       res->t_full = T; stopped_req = 1;
@@ -476,6 +580,7 @@ int run(Params *pp, unsigned long long seed, Result *res, const char *rec_path, 
   res->t_end = T;
   for (int i = 0; i < NB; i++) if (B[i].alive && !B[i].gone) { res->nballs++; res->col_count[B[i].col]++; }
   res->fill_at_end = fill_ratio();
+  for (int i = 0; i < NB; i++) if (B[i].alive && !B[i].gone && B[i].col < NCOL - 1) { res->lone_col = B[i].col; res->lone_id = B[i].id; }
   if (fev) fclose(fev);
   if (frec) fclose(frec);
   fev = frec = NULL;

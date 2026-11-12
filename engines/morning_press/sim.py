@@ -22,7 +22,7 @@ class Params(C.Structure):
         [('mech', C.c_int), ('axis', C.c_int)] + \
         [(n, C.c_double) for n in 'W H g_open rod_w t_close t_hold t_open t_pause fill_target tmax t_end_hold r0 rmin shrink'.split()] + \
         [('stop_no_green', C.c_int), ('jitter', C.c_double), ('npos_iter', C.c_int),
-         ('slit_ang', C.c_double), ('slit_w', C.c_double)]
+         ('slit_ang', C.c_double), ('slit_w', C.c_double), ('rescue', C.c_double), ('rescue_v', C.c_double), ('rescue_nmax', C.c_int)]
 
 
 class Result(C.Structure):
@@ -30,7 +30,11 @@ class Result(C.Structure):
                 ('nballs', C.c_int), ('crushed_total', C.c_int), ('green_cap', C.c_double * 2),
                 ('col_count', C.c_int * 8), ('first_hit', C.c_double), ('max_overlap', C.c_double),
                 ('max_wall_pen', C.c_double), ('bad_split', C.c_int), ('escapes', C.c_int),
-                ('escape_t', C.c_double), ('escape_col', C.c_int), ('fill_at_end', C.c_double)]
+                ('escape_t', C.c_double), ('escape_col', C.c_int), ('fill_at_end', C.c_double),
+                ('t_multi', C.c_double), ('lone_col', C.c_int), ('lone_id', C.c_int),
+                ('rescues', C.c_int), ('rescue_t', C.c_double), ('rescue_f', C.c_double),
+                ('rescue_col', C.c_int), ('rescue_id', C.c_int), ('rescue_hit_crushed', C.c_int),
+                ('rescue_kicks', C.c_int), ('rescue_fail', C.c_int)]
 
 
 # Mécanismes disponibles. Chaque entrée = réglages du coeur C.
@@ -40,13 +44,16 @@ MECHS = {
     'press': dict(mech=0, axis=0, W=320.0, H=100.0, g_open=210.0, rod_w=34.0),
     # PRESSE LATÉRALE : 2 blocs (gauche / droite)
     'press_side': dict(mech=0, axis=1, W=320.0, H=100.0, g_open=210.0, rod_w=34.0),
+    # MÂCHOIRES : 2 demi-disques (rayon W/2, faces plates face à face) qui claquent haut / bas comme une bouche.
+    # H = W/2 = profondeur d'un demi-disque (sert aussi de zone interdite pour placer les balles nées).
+    'jaws': dict(mech=1, axis=0, W=320.0, H=160.0, g_open=210.0, rod_w=34.0),
 }
 
 BASE = dict(R=R, cx=CX, cy=CY, speed=320.0, dt=1 / 240.0,
             t_close=0.16, t_hold=0.06, t_open=0.30, t_pause=0.30,
             fill_target=0.50, tmax=62.0, t_end_hold=2.5,
             r0=26.0, rmin=15.0, shrink=0.88, stop_no_green=0, jitter=40.0, npos_iter=4,
-            slit_ang=0.0, slit_w=0.0)
+            slit_ang=0.0, slit_w=0.0, rescue=0.0, rescue_v=400.0, rescue_nmax=0)
 
 _lib = None
 

@@ -138,6 +138,9 @@ def main():
             last = e[0]
     for e in E[E[:, 1] == 6]:
         add(buf, fiou(), e[0] - 0.12, 0.35)
+    # LA RESCAPÉE : petit « fiou » discret quand la balle chassée sort des mâchoires
+    for e in E[E[:, 1] == 8]:
+        add(buf, fiou(), e[0] - 0.10, 0.22)
     buf = buf[:int(dur * SR)]
     peak = np.abs(buf).max()
     target = 10 ** (-1.2 / 20)
