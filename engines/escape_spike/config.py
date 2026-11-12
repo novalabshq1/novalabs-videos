@@ -1,0 +1,10 @@
+# ESCAPE fixed settings (bottom gap, identical launch). Import this before using esc_sim.
+import esc_sim as E, math
+GAP_DEG = 20.0
+def apply(gap_deg=None):
+    g = GAP_DEG if gap_deg is None else gap_deg
+    E.RO = 490.0; E.RING_T = 16.0; E.RI = E.RO - E.RING_T; E.BR = 26.0
+    E.MAX_TRIES = 45; E.ROT = 0; E.NSPK = 88; E.SPK_HALF = math.pi / 88; E.SPK_H = 62; E.LEAN = 1.0
+    E.GAP_AT = math.radians(90); E.G = 400; E.V0 = 360; E.GAP = math.radians(g); E.SPIKES = E.spike_angles()
+    E.LAUNCH_DEG = -80.0; E.LAUNCH_JIT = 8.0
+    return E
