@@ -13,7 +13,7 @@
 
 typedef struct {
   double R, cx, cy, speed, dt;
-  int mech;          // 0 = PRESS (2 blocks closing on the centre), 1 = JAWS (2 half-discs, flat faces)
+  int mech;          // 0 = PRESS (2 blocks closing on the centre), 1 = JAWS (2 half-discs, flat faces), 2 = IRIS (4 pointed blades)
   int axis;          // 0 = blocks move vertically (top/bottom), 1 = horizontally (left/right)
   double W, H, g_open, rod_w;
   double t_close, t_hold, t_open, t_pause;
@@ -31,6 +31,7 @@ typedef struct {
   double rescue;
   double rescue_v;   // minimum closing speed of the blow (px/s)
   int rescue_nmax;   // only in a loosely filled bite (at most this many balls caught): a packed bite holds
+  double lone_max;   // LA DERNIÈRE COULEUR: t_multi = last time more than one ball of colour <= lone_max was alive
 } Params;
 
 typedef struct {
@@ -236,7 +237,107 @@ static int capsule_push(Ball *q, double h, double Rj, double limit) {
   return 1;
 }
 
+
+// ---- IRIS (mech 2): 4 pointed blades (top, bottom, left, right) that slide to the centre and close into a cross.
+// Blade k has outward unit vector IU[k] in the (a, b) frame. In blade coords (s along IU, t across) it is the
+// pentagon tip (f, 0), shoulders (f + hw, +-hw), back (f + hw + H, +-hw). The 90-degree tips tile the plane at f = 0.
+// Free space between the blades = central diamond |a|+|b| < f + diagonal channels (width sqrt2 f), closed outward by
+// the mouth lines |a|+|b| = f + 2 hw (which pass through the blade shoulders). That whole region is the capture zone.
+static const double IU[4][2] = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
+
+static double poly_sd(double V[][2], int n, double s, double t, double *ns, double *nt) {
+  double cs = 0, ct = 0;
+  for (int i = 0; i < n; i++) { cs += V[i][0]; ct += V[i][1]; }
+  cs /= n; ct /= n;
+  double maxd = -1e18, bns = 1, bnt = 0, best = 1e18, bs = 0, bt = 0;
+  for (int i = 0; i < n; i++) {
+    int j = (i + 1) % n;
+    double ex = V[j][0] - V[i][0], ey = V[j][1] - V[i][1], L = hypot(ex, ey);
+    double nx = ey / L, ny = -ex / L;
+    if ((cs - V[i][0]) * nx + (ct - V[i][1]) * ny > 0) { nx = -nx; ny = -ny; }
+    double dl = (s - V[i][0]) * nx + (t - V[i][1]) * ny;
+    if (dl > maxd) { maxd = dl; bns = nx; bnt = ny; }
+    double u = ((s - V[i][0]) * ex + (t - V[i][1]) * ey) / (L * L);
+    if (u < 0) u = 0; if (u > 1) u = 1;
+    double px = V[i][0] + u * ex, py = V[i][1] + u * ey, d = hypot(s - px, t - py);
+    if (d < best) { best = d; bs = s - px; bt = t - py; }
+  }
+  if (maxd <= 0 || best < 1e-9) { *ns = bns; *nt = bnt; return maxd <= 0 ? maxd : 0; }
+  *ns = bs / best; *nt = bt / best;
+  return best;
+}
+
+static void blade_poly(double f_, double V[5][2]) {
+  double hw = P.W * 0.5, sb = f_ + hw + P.H;
+  V[0][0] = f_; V[0][1] = 0; V[1][0] = f_ + hw; V[1][1] = -hw; V[2][0] = sb; V[2][1] = -hw;
+  V[3][0] = sb; V[3][1] = hw; V[4][0] = f_ + hw; V[4][1] = hw;
+}
+
+// signed distance (a,b) to blade k / its rod; normal returned in (a,b)
+static double blade_sd_ab(int k, double a, double b, double f_, int rod, double *na, double *nb) {
+  double ua = IU[k][0], ub = IU[k][1];
+  double s = a * ua + b * ub, t = -a * ub + b * ua, ns, nt, sd;
+  // quick reject (anything farther than 60 px is reported as far away)
+  if (!rod) { if (fabs(t) > P.W * 0.5 + 60 || s < f_ - 60 || s > f_ + P.W * 0.5 + P.H + 60) { *na = 1; *nb = 0; return 1e9; } }
+  else if (fabs(t) > P.rod_w * 0.5 + 60 || s < f_ + P.W * 0.5 + P.H - 64) { *na = 1; *nb = 0; return 1e9; }
+  if (!rod) { double V[5][2]; blade_poly(f_, V); sd = poly_sd(V, 5, s, t, &ns, &nt); }
+  else {
+    double rw = P.rod_w * 0.5, s0 = f_ + P.W * 0.5 + P.H - 4, s1 = P.R + 40;
+    double V[4][2] = {{s0, -rw}, {s1, -rw}, {s1, rw}, {s0, rw}};
+    sd = poly_sd(V, 4, s, t, &ns, &nt);
+  }
+  *na = ns * ua - nt * ub; *nb = ns * ub + nt * ua;
+  return sd;
+}
+
+static double iris_min_sd(double a, double b, double f_) {
+  double m = 1e18, na, nb;
+  for (int k = 0; k < 4; k++) {
+    double d = blade_sd_ab(k, a, b, f_, 0, &na, &nb); if (d < m) m = d;
+    d = blade_sd_ab(k, a, b, f_, 1, &na, &nb); if (d < m) m = d;
+  }
+  return m;
+}
+
+static void ab_push(Ball *q, double na, double nb, double pen, double wa, double wb, double limit) {
+  if (limit > 0 && pen > limit) pen = limit;
+  double a, b; to_ab(q->x, q->y, &a, &b);
+  a += na * pen; b += nb * pen;
+  from_ab(a, b, &q->x, &q->y);
+  double va, vb; vel_to_ab(q->vx, q->vy, &va, &vb);
+  double ra = va - wa, rb = vb - wb, vn = ra * na + rb * nb;
+  if (vn < 0) { ra -= 2 * vn * na; rb -= 2 * vn * nb; vel_from_ab(ra + wa, rb + wb, &q->vx, &q->vy); }
+}
+
+static void iris_constrain(Ball *q, double lim) {
+  double hw = P.W * 0.5, Lm = f + 2 * hw, na, nb, a, b;
+  int sealed = (phase == 1 || phase == 2 || (phase == 4 && f < 1));
+  for (int k = 0; k < 4; k++) {
+    to_ab(q->x, q->y, &a, &b);
+    double sd = blade_sd_ab(k, a, b, f, 0, &na, &nb);
+    if (sd < q->r) ab_push(q, na, nb, q->r - sd, fv * IU[k][0], fv * IU[k][1], 0);
+    to_ab(q->x, q->y, &a, &b);
+    sd = blade_sd_ab(k, a, b, f, 1, &na, &nb);
+    if (sd < q->r) ab_push(q, na, nb, q->r - sd, 0, 0, 0);
+  }
+  to_ab(q->x, q->y, &a, &b);
+  double sa = a >= 0 ? 1 : -1, sb = b >= 0 ? 1 : -1, r2 = sqrt(2.0);
+  double dline = (Lm - fabs(a) - fabs(b)) / r2;   // distance to the mouth line (positive inside)
+  if (q->cap) {
+    if (dline < q->r) ab_push(q, -sa / r2, -sb / r2, q->r - dline, -sa * fv / 2, -sb * fv / 2, lim);
+  } else if (sealed) {
+    if (-dline < q->r) ab_push(q, sa / r2, sb / r2, q->r + dline, 0, 0, lim);
+  }
+}
+
+static int iris_in_zone(Ball *q) {
+  double a, b; to_ab(q->x, q->y, &a, &b);
+  if (fabs(a) + fabs(b) >= f + P.W) return 0;
+  return iris_min_sd(a, b, f) > 0;
+}
+
 static int in_zone(Ball *q) {
+  if (P.mech == 2) return iris_in_zone(q);
   double a, b; to_ab(q->x, q->y, &a, &b);
   return fabs(b) < P.W * 0.5 && fabs(a) < f;
 }
@@ -245,6 +346,7 @@ static void mech_constrain(Ball *q) {
   if (q->gone) return;
   double hw = P.W * 0.5;
   double lim = (phase == 1 && tp < 0.07) ? 3.0 : 0;
+  if (P.mech == 2) { iris_constrain(q, lim); return; }
   if (q->cap) {
     // retained inside the closing box
     double a, b; to_ab(q->x, q->y, &a, &b);
@@ -289,11 +391,25 @@ static int overlaps_any(double x, double y, double r, int skip) {
   return 0;
 }
 
+static double overlap_amount(double x, double y, double r) {
+  double m = -1e18;
+  for (int i = 0; i < NB; i++) {
+    if (!B[i].alive || B[i].gone) continue;
+    double dx = B[i].x - x, dy = B[i].y - y, ov = B[i].r + r + 1.0 - sqrt(dx * dx + dy * dy);
+    if (ov > m) m = ov;
+  }
+  return m;
+}
+
 static int point_ok(double a, double b, double r) {
   double x, y; from_ab(a, b, &x, &y);
   double dx = x - P.cx, dy = y - P.cy;
   if (hypot(dx, dy) > P.R - r - 1) return 0;
   double hw = P.W * 0.5;
+  if (P.mech == 2) {
+    if ((fabs(a) + fabs(b) - (f + P.W)) / sqrt(2.0) < r + 1) return 0;
+    return iris_min_sd(a, b, f) >= r + 1;
+  }
   if (fabs(b) < hw + r + 1 && fabs(a) < f + P.H + r + 1) return 0;
   return 1;
 }
@@ -309,6 +425,32 @@ static void crush(int i) {
   ev(2, q->x, q->y, q->col, q->id, q->r);
   int made = 0;
   double a0 = q->capa * 0.6;
+  if (P.mech == 2) {  // IRIS: one child out of the diagonal gap nearest the ball, the other out of the opposite one
+    double sa = a >= 0 ? 1 : -1, sb = b >= 0 ? 1 : -1, r2 = sqrt(2.0);
+    for (int side = -1; side <= 1; side += 2) {
+      double da = side * sa / r2, db = side * sb / r2, pa = -db, pb = da;
+      double ax = 0, bx = 0, bestov = 1e18; int found = 0;
+      for (int k = 0; k < 400 && !found; k++) {
+        double d = r2 * (P.W * 0.5 + nr) + 3 + (k / 8) * 6.0;
+        double o = ((k % 8) - 3.5) * (nr * 0.9) * (1 + (k / 8) * 0.15);
+        double aa = da * d + pa * o, bb = db * d + pb * o;
+        if (!point_ok(aa, bb, nr * 0.4)) continue;
+        double x, y; from_ab(aa, bb, &x, &y);
+        double ov = overlap_amount(x, y, nr * 0.4);
+        if (ov < bestov) { bestov = ov; ax = aa; bx = bb; }
+        if (ov <= 0 && point_ok(aa, bb, nr)) { ax = aa; bx = bb; found = 1; }
+      }
+      if (bestov >= 1e17) { double d = r2 * (P.W * 0.5 + nr) + 3; ax = da * d; bx = db * d; }
+      double th = (rnd() - 0.5) * (M_PI * 0.5), c = cos(th), sn = sin(th);
+      double va = da * c - db * sn, vb = da * sn + db * c;
+      double x, y, vx, vy; from_ab(ax, bx, &x, &y); vel_from_ab(va, vb, &vx, &vy);
+      int k2 = add_ball(x, y, vx, vy, nr, nc);
+      if (k2 >= 0) { made++; B[k2].r = nr * 0.4; }
+      ev(5, x, y, nc, nextid - 1, nr);
+    }
+    if (made != 2) RES->bad_split++;
+    return;
+  }
   for (int side = -1; side <= 1; side += 2) {
     double hw = P.W * 0.5;
     double bx = 0, ax = 0; int found = 0;
@@ -432,6 +574,10 @@ int run(Params *pp, unsigned long long seed, Result *res, const char *rec_path, 
   for (int s = -1; s <= 1; s += 2) {
     double b = s * (P.W * 0.5 + 0.5 * (P.R - P.W * 0.5)) + (rnd() - 0.5) * P.jitter;
     double a = (rnd() - 0.5) * 2 * P.jitter;
+    if (P.mech == 2) {  // IRIS: in two opposite diagonal gaps
+      double d = 290 + (rnd() - 0.5) * P.jitter * 0.5, o = (rnd() - 0.5) * P.jitter;
+      a = s * d / sqrt(2.0) + o / sqrt(2.0); b = s * d / sqrt(2.0) - o / sqrt(2.0);
+    }
     double x, y; from_ab(a, b, &x, &y);
     double ang = rnd() * 2 * M_PI;
     add_ball(x, y, cos(ang), sin(ang), P.r0, 0);
@@ -488,7 +634,8 @@ int run(Params *pp, unsigned long long seed, Result *res, const char *rec_path, 
     fv = (f - fo) / P.dt;
     // crush captured balls that no longer fit between the faces
     if (phase == 1 || phase == 2) {
-      for (int i = 0; i < NB; i++) if (B[i].alive && B[i].cap && f < B[i].r + 0.5) crush(i);
+      double kf = (P.mech == 2) ? sqrt(2.0) : 1.0;  // IRIS: free gap between blades is sqrt2 f wide
+      for (int i = 0; i < NB; i++) if (B[i].alive && B[i].cap && f < kf * (B[i].r + 0.5)) crush(i);
     }
     // ---- integrate ----
     for (int i = 0; i < NB; i++) if (B[i].alive) { B[i].x += B[i].vx * P.dt; B[i].y += B[i].vy * P.dt; B[i].kick = 0; }
@@ -534,7 +681,8 @@ int run(Params *pp, unsigned long long seed, Result *res, const char *rec_path, 
         Ball *p = &B[i];
         if (!p->alive || !p->cap) continue;
         double a, b; to_ab(p->x, p->y, &a, &b);
-        if (fabs(a) < f - p->r - 0.5) continue;
+        if (P.mech == 2) { if (iris_min_sd(a, b, f) > p->r + 0.5) continue; }
+        else if (fabs(a) < f - p->r - 0.5) continue;
         for (int j = 0; j < NB; j++) {
           if (j == i || !B[j].alive || !B[j].cap) continue;
           double dx = B[j].x - p->x, dy = B[j].y - p->y, rr = p->r + B[j].r;
@@ -555,7 +703,7 @@ int run(Params *pp, unsigned long long seed, Result *res, const char *rec_path, 
     }
     {
       int nm = 0;
-      for (int i = 0; i < NB; i++) if (B[i].alive && !B[i].gone && B[i].col < NCOL - 1) nm++;
+      for (int i = 0; i < NB; i++) if (B[i].alive && !B[i].gone && B[i].col <= (int)P.lone_max) nm++;
       if (nm > 1 && res->t_full < 0) res->t_multi = T;
     }
     // ---- fill ----
@@ -580,7 +728,7 @@ int run(Params *pp, unsigned long long seed, Result *res, const char *rec_path, 
   res->t_end = T;
   for (int i = 0; i < NB; i++) if (B[i].alive && !B[i].gone) { res->nballs++; res->col_count[B[i].col]++; }
   res->fill_at_end = fill_ratio();
-  for (int i = 0; i < NB; i++) if (B[i].alive && !B[i].gone && B[i].col < NCOL - 1) { res->lone_col = B[i].col; res->lone_id = B[i].id; }
+  for (int i = 0; i < NB; i++) if (B[i].alive && !B[i].gone && B[i].col <= (int)P.lone_max) { res->lone_col = B[i].col; res->lone_id = B[i].id; }
   if (fev) fclose(fev);
   if (frec) fclose(frec);
   fev = frec = NULL;

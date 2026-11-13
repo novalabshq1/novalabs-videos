@@ -153,6 +153,61 @@ def draw_jaws(ctx, m, f):
     cr.restore(ctx)
 
 
+IRIS_U = [(-1, 0), (1, 0), (0, -1), (0, 1)]   # (a, b) : haut, bas, gauche, droite
+
+
+def draw_iris(ctx, m, f):
+    """IRIS : 4 lames à pointe 90° (haut, bas, gauche, droite) qui glissent vers le centre ; une tige chacune."""
+    hw, H, rw = m['W'] / 2, m['H'], m['rod_w']
+
+    def P(ua, ub, s, t):
+        a, b = s * ua - t * ub, s * ub + t * ua
+        return CX + b, CY + a
+
+    def poly(pts):
+        cr.new_path(ctx)
+        cr.move_to(ctx, *pts[0])
+        for p in pts[1:]:
+            cr.line_to(ctx, *p)
+        cr.close_path(ctx)
+
+    cr.save(ctx)
+    cr.new_path(ctx)
+    cr.arc(ctx, CX, CY, R - 2.5, 0, 2 * math.pi)
+    cr.clip(ctx)
+    cr.set_line_join(ctx, 1)
+    sb = f + hw + H
+    for ua, ub in IRIS_U:
+        poly([P(ua, ub, sb - 4, -rw / 2), P(ua, ub, R + 20, -rw / 2), P(ua, ub, R + 20, rw / 2), P(ua, ub, sb - 4, rw / 2)])
+        fill_stroke(ctx, hexrgb(ROD))
+    for ua, ub in IRIS_U:
+        blade = [P(ua, ub, f, 0), P(ua, ub, f + hw, -hw), P(ua, ub, sb, -hw), P(ua, ub, sb, hw), P(ua, ub, f + hw, hw)]
+        poly(blade)
+        fill_stroke(ctx, hexrgb(BLOCK))
+        # bande de frappe en chevron le long des 2 faces de la pointe
+        e = 16 * math.sqrt(2)
+        poly([P(ua, ub, f, 0), P(ua, ub, f + hw, -hw), P(ua, ub, f + hw + e, -hw), P(ua, ub, f + e, 0),
+              P(ua, ub, f + hw + e, hw), P(ua, ub, f + hw, hw)])
+        fill_stroke(ctx, hexrgb(PLATE), 3.0)
+        poly(blade)
+        cr.set_rgb(ctx, *OUTLINE)
+        cr.set_line_width(ctx, 3.0)
+        cr.stroke(ctx)
+        cr.set_rgb(ctx, *hexrgb(RIVET))
+        for tt in (-hw + 20, 0, hw - 20):
+            x, y = P(ua, ub, sb - 18, tt)
+            cr.new_path(ctx)
+            cr.arc(ctx, x, y, 5.0, 0, 2 * math.pi)
+            cr.fill(ctx)
+        for k in range(1, 3):
+            x, y = P(ua, ub, sb + 30 * k, 0)
+            if math.hypot(x - CX, y - CY) < R - 12:
+                cr.new_path(ctx)
+                cr.arc(ctx, x, y, 4.0, 0, 2 * math.pi)
+                cr.fill(ctx)
+    cr.restore(ctx)
+
+
 def draw_frame(ctx, frame, m, slit=None):
     t, f, ph, arr = frame
     cr.set_rgb(ctx, 0, 0, 0)
@@ -165,7 +220,7 @@ def draw_frame(ctx, frame, m, slit=None):
         cr.new_path(ctx)
         cr.arc(ctx, float(x), float(y), float(r), 0, 2 * math.pi)
         cr.fill(ctx)
-    (draw_jaws if m.get('mech') == 1 else draw_press)(ctx, m, f)
+    {1: draw_jaws, 2: draw_iris}.get(m.get('mech'), draw_press)(ctx, m, f)
     # cercle : contour blanc 5 px, rayon 450 (diamètre 900)
     cr.set_rgb(ctx, *OUTLINE)
     cr.set_line_width(ctx, 5.0)

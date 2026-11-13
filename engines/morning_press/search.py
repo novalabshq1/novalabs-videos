@@ -3,6 +3,7 @@
 python3 search.py MECH TWIST SEED0 SEED1 [out.jsonl]
   MECH  : clé de sim.MECHS (press, press_side, ...)
   TWIST : survivor | tricheuse | lastcolor | rescapee | any
+  --extra '{"lone_max": 4}' : réglages ajoutés (ex. LA DERNIÈRE COULEUR version « une seule balle chaude »)
 Critères communs : cercle plein entre 42 et 57 s, aucun coup dans le vide, aucune division ratée,
 premier coup avant 3 s, montée progressive.
 """
@@ -52,8 +53,11 @@ def job(seed):
     elif TWIST == 'tricheuse':
         tw = r['escapes'] == 1 and 15 < r['escape_t'] < r['t_full'] - 3
     elif TWIST == 'lastcolor':
+        # une seule balle de couleur <= lone_max (par défaut tout sauf cyan ; lone_max=4 : une seule balle rose ou plus
+        # chaude au milieu des violettes / bleues / cyan), seule de sa couleur depuis au moins 6 s
         cc = r['col_count']
-        tw = r['t_full'] > 0 and sum(cc[:7]) == 1 and r['t_full'] - r['t_multi'] >= 4.0
+        lm = int(over.get('lone_max', 6))
+        tw = r['t_full'] > 0 and sum(cc[:lm + 1]) == 1 and r['t_full'] - r['t_multi'] >= 6.0
     elif TWIST == 'rescapee':
         # une seule balle chassée des mâchoires (et elle s'en sort), bien visible : entre 8 s et 5 s avant la fin
         tw = r['rescue_kicks'] == 1 and r['rescues'] == 1 and r['rescue_fail'] == 0 and 8 < r['rescue_t'] < r['t_full'] - 5
@@ -68,6 +72,8 @@ def job(seed):
 
 if __name__ == '__main__':
     MECH, TWIST = sys.argv[1], sys.argv[2]
+    if '--extra' in sys.argv:
+        EXTRA = json.loads(sys.argv[sys.argv.index('--extra') + 1])
     s0, s1 = int(sys.argv[3]), int(sys.argv[4])
     out = sys.argv[5] if len(sys.argv) > 5 else 'search_%s_%s.jsonl' % (MECH, TWIST)
     with Pool(os.cpu_count()) as p, open(out, 'w') as fo:
@@ -76,5 +82,5 @@ if __name__ == '__main__':
             fo.write(json.dumps(r) + '\n')
             if r['ok']:
                 n += 1
-                print('OK seed %d full %.2f hits %d green_cap %s' % (r['seed'], r['t_full'], r['hits'], r['green_cap']), flush=True)
+                print('OK seed %d full %.2f hits %d green_cap %s cols %s lone %d' % (r['seed'], r['t_full'], r['hits'], r['green_cap'], r['col_count'], r['lone_col']), flush=True)
     print('valid:', n)
