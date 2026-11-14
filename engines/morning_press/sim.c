@@ -14,7 +14,7 @@
 typedef struct {
   double R, cx, cy, speed, dt;
   int mech;          // 0 = PRESS (2 blocks closing on the centre), 1 = JAWS (2 half-discs, flat faces), 2 = IRIS (4 pointed blades)
-  int axis;          // 0 = blocks move vertically (top/bottom), 1 = horizontally (left/right)
+  int axis;          // 0 = blocks move vertically (top/bottom), 1 = horizontally (left/right), 2 = along angle P.ang
   double W, H, g_open, rod_w;
   double t_close, t_hold, t_open, t_pause;
   double fill_target, tmax, t_end_hold;
@@ -32,6 +32,7 @@ typedef struct {
   double rescue_v;   // minimum closing speed of the blow (px/s)
   int rescue_nmax;   // only in a loosely filled bite (at most this many balls caught): a packed bite holds
   double lone_max;   // LA DERNIÈRE COULEUR: t_multi = last time more than one ball of colour <= lone_max was alive
+  double ang;        // axis 2 (PRESSE DIAGONALE): direction of the closing axis (radians, screen frame)
 } Params;
 
 typedef struct {
@@ -89,17 +90,24 @@ static void ev(int type, double x, double y, int col, int id, double val) {
 }
 
 // local frame helpers: a = along motion axis, b = across
+static double UA[2] = {0, 1}, UB[2] = {1, 0};  // unit vectors of the a (closing) and b (across) axes
+static void set_axes(void) {
+  if (P.axis == 0) { UA[0] = 0; UA[1] = 1; UB[0] = 1; UB[1] = 0; }
+  else if (P.axis == 1) { UA[0] = 1; UA[1] = 0; UB[0] = 0; UB[1] = 1; }
+  else { UA[0] = cos(P.ang); UA[1] = sin(P.ang); UB[0] = -sin(P.ang); UB[1] = cos(P.ang); }
+}
 static inline void to_ab(double x, double y, double *a, double *b) {
-  if (P.axis == 0) { *a = y - P.cy; *b = x - P.cx; } else { *a = x - P.cx; *b = y - P.cy; }
+  double dx = x - P.cx, dy = y - P.cy;
+  *a = dx * UA[0] + dy * UA[1]; *b = dx * UB[0] + dy * UB[1];
 }
 static inline void from_ab(double a, double b, double *x, double *y) {
-  if (P.axis == 0) { *y = a + P.cy; *x = b + P.cx; } else { *x = a + P.cx; *y = b + P.cy; }
+  *x = P.cx + a * UA[0] + b * UB[0]; *y = P.cy + a * UA[1] + b * UB[1];
 }
 static inline void vel_to_ab(double vx, double vy, double *va, double *vb) {
-  if (P.axis == 0) { *va = vy; *vb = vx; } else { *va = vx; *vb = vy; }
+  *va = vx * UA[0] + vy * UA[1]; *vb = vx * UB[0] + vy * UB[1];
 }
 static inline void vel_from_ab(double va, double vb, double *vx, double *vy) {
-  if (P.axis == 0) { *vy = va; *vx = vb; } else { *vx = va; *vy = vb; }
+  *vx = va * UA[0] + vb * UB[0]; *vy = va * UA[1] + vb * UB[1];
 }
 
 static void norm_speed(Ball *q) {
@@ -560,6 +568,7 @@ static void write_frame(void) {
 
 int run(Params *pp, unsigned long long seed, Result *res, const char *rec_path, const char *ev_path) {
   P = *pp; RES = res;
+  set_axes();
   memset(res, 0, sizeof(Result));
   res->t_full = -1; res->green_cap[0] = res->green_cap[1] = -1; res->first_hit = -1;
   res->escape_t = -1; res->escape_col = -1; res->t_multi = 0; res->lone_col = -1; res->lone_id = -1;

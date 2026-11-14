@@ -38,16 +38,31 @@ def hexrgb(h):
 RGB = [hexrgb(c) for c in COLORS]
 
 
+def axes(axis, ang=0.0):
+    """vecteurs unitaires (repère écran) de l'axe de fermeture a et du travers b (même convention que sim.c)."""
+    if axis == 0:
+        return (0.0, 1.0), (1.0, 0.0)
+    if axis == 1:
+        return (1.0, 0.0), (0.0, 1.0)
+    return (math.cos(ang), math.sin(ang)), (-math.sin(ang), math.cos(ang))
+
+
+AXIS_ANG = {}
+
+
 def rect_ab(ctx, axis, a0, a1, b0, b1):
     """rectangle dans le repère du mécanisme (a = axe de fermeture, b = travers)."""
-    if axis == 0:
-        cr.rectangle(ctx, CX + b0, CY + a0, b1 - b0, a1 - a0)
-    else:
-        cr.rectangle(ctx, CX + a0, CY + b0, a1 - a0, b1 - b0)
+    cr.new_path(ctx)
+    pts = [pt_ab(axis, a0, b0), pt_ab(axis, a1, b0), pt_ab(axis, a1, b1), pt_ab(axis, a0, b1)]
+    cr.move_to(ctx, *pts[0])
+    for p in pts[1:]:
+        cr.line_to(ctx, *p)
+    cr.close_path(ctx)
 
 
 def pt_ab(axis, a, b):
-    return (CX + b, CY + a) if axis == 0 else (CX + a, CY + b)
+    ua, ub = axes(axis, AXIS_ANG.get('ang', 0.0))
+    return CX + a * ua[0] + b * ub[0], CY + a * ua[1] + b * ub[1]
 
 
 def fill_stroke(ctx, rgb, lw=3.0):
@@ -247,6 +262,7 @@ def main():
     frames = load_record(rec)
     os.remove(rec)
     m = MECHS[mech]
+    AXIS_ANG['ang'] = m.get('ang', 0.0)
     slit = (extra['slit_ang'], extra['slit_w']) if extra.get('slit_w', 0) > 0 else None
     surf = cr.surface_create(0, WIDTH, HEIGHT)  # ARGB32
     ctx = cr.create(surf)

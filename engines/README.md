@@ -34,7 +34,7 @@ des balles >= 50 % du cercle (la presse reste fermée) + 2,5 s.
 Fichiers : sim.c (coeur physique C, compilé automatiquement), sim.py (wrapper, MECHS = mécanismes disponibles),
 search.py (recherche parallèle), render.py (rendu + export TikTok), audio.py (bruitages / mélodie), qc.py (contrôle), diag.py.
 cd engines/morning_press
-1. python3 search.py MECH TWIST 0 1500 out.jsonl [--extra '{"lone_max": 3}']   MECH : press | press_side | jaws | iris ; TWIST : survivor | tricheuse | lastcolor | rescapee | any
+1. python3 search.py MECH TWIST 0 1500 out.jsonl [--extra '{"lone_max": 3}']   MECH : press | press_side | press_diag | jaws | iris ; TWIST : survivor | tricheuse | lastcolor | rescapee | any
    (lignes "OK" = parties valides : plein entre 42 et 57 s, aucun coup dans le vide, chevauchement <= 2,5 px, élément arrivé)
 2. python3 audio.py SEED MECH audio.wav ['{"slit_ang":..,"slit_w":34}'] [--melody "E5,D5,C5,..."]
 3. python3 render.py SEED MECH audio.wav final.mp4 ['{extra}']        (images clés : --frames 0,60,... --png-dir DIR)
@@ -45,6 +45,9 @@ Mécanismes faits : press (2026-11-09, 2026-11-10), press_side (2026-11-11, avec
   iris (2026-11-13, IRIS : 4 lames à pointe 90° haut/bas/gauche/droite qui glissent vers le centre et se referment en croix ; zone de prise =
   losange central + 4 canaux diagonaux fermés par les lignes |a|+|b| = f + W ; écrasement quand le passage (√2·f) devient plus étroit que la balle ;
   les 2 balles nées sortent par la diagonale la plus proche et par la diagonale opposée ; réglages W 180, H 80, g_open 120 -> plein vers 42-57 s).
+  press_diag (2026-11-14, PRESSE DIAGONALE : la presse validée sur un axe à 45° haut-gauche / bas-droite ; axis=2 + réglage
+  `ang` (radians) dans sim.c : n'importe quel angle d'axe marche pour press / jaws, le rendu suit via pt_ab/rect_ab ; avec LA SURVIVANTE ~1 graine valide / 60).
+Python : utiliser un python3 qui a numpy (dans le conteneur cloud : /usr/bin/python3.13).
 LA RESCAPÉE (TWIST rescapee, réglages {"rescue": 3.0, "rescue_v": 250.0, "rescue_nmax": 6}) : règle physique uniforme dans sim.c — une balle prise
   qui touche déjà le bord de la zone et reçoit un choc franc (> 250 px/s) d'une autre balle prise, dans une bouchée peu remplie (<= 6 balles),
   est chassée vers l'extérieur ; elle doit sortir seule avant que les faces se ferment, sinon elle est écrasée quand même. ~2 graines valides / 1300.

@@ -22,7 +22,7 @@ class Params(C.Structure):
         [('mech', C.c_int), ('axis', C.c_int)] + \
         [(n, C.c_double) for n in 'W H g_open rod_w t_close t_hold t_open t_pause fill_target tmax t_end_hold r0 rmin shrink'.split()] + \
         [('stop_no_green', C.c_int), ('jitter', C.c_double), ('npos_iter', C.c_int),
-         ('slit_ang', C.c_double), ('slit_w', C.c_double), ('rescue', C.c_double), ('rescue_v', C.c_double), ('rescue_nmax', C.c_int), ('lone_max', C.c_double)]
+         ('slit_ang', C.c_double), ('slit_w', C.c_double), ('rescue', C.c_double), ('rescue_v', C.c_double), ('rescue_nmax', C.c_int), ('lone_max', C.c_double), ('ang', C.c_double)]
 
 
 class Result(C.Structure):
@@ -50,13 +50,15 @@ MECHS = {
     # IRIS : 4 lames pointées (haut, bas, gauche, droite), pointes à 90°, qui glissent vers le centre et se referment
     # en croix (elles se touchent exactement). W = largeur d'une lame, H = longueur de la partie droite, g_open = ouverture.
     'iris': dict(mech=2, axis=0, W=180.0, H=80.0, g_open=120.0, rod_w=34.0),
+    # PRESSE DIAGONALE : les 2 blocs de la presse validée, sur l'axe en biais haut-gauche / bas-droite (45°)
+    'press_diag': dict(mech=0, axis=2, ang=0.7853981633974483, W=320.0, H=100.0, g_open=210.0, rod_w=34.0),
 }
 
 BASE = dict(R=R, cx=CX, cy=CY, speed=320.0, dt=1 / 240.0,
             t_close=0.16, t_hold=0.06, t_open=0.30, t_pause=0.30,
             fill_target=0.50, tmax=62.0, t_end_hold=2.5,
             r0=26.0, rmin=15.0, shrink=0.88, stop_no_green=0, jitter=40.0, npos_iter=4,
-            slit_ang=0.0, slit_w=0.0, rescue=0.0, rescue_v=400.0, rescue_nmax=0, lone_max=6.0)
+            slit_ang=0.0, slit_w=0.0, rescue=0.0, rescue_v=400.0, rescue_nmax=0, lone_max=6.0, ang=0.0)
 
 _lib = None
 
